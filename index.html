@@ -1,30 +1,517 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="ja">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover" />
+  <title>ULTIMATE7（Loto6）</title>
 
-  <title>ULTIMATE7</title>
-
-  <!-- PWA設定 -->
-  <link rel="manifest" href="./manifest.json">
-  <meta name="theme-color" content="#0f172a">
-  <link rel="apple-touch-icon" href="./icon.png">
+  <!-- PWA（manifest.json / アイコンはリポジトリ直下に置いてね） -->
+  <link rel="manifest" href="./manifest.json" />
+  <meta name="theme-color" content="#0b1220" />
+  <link rel="apple-touch-icon" href="./icon-192.png" />
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
 
   <style>
-    body {
-      margin: 0;
-      font-family: -apple-system, BlinkMacSystemFont, "Helvetica Neue", sans-serif;
-      background: #0f172a;
-      color: #fff;
-      text-align: center;
-      padding-top: 40px;
+    :root{
+      --bg:#0b1220; --card:#121a2c; --card2:#0f172a;
+      --text:#e7eefc; --muted:#93a4c7; --line:#22304f;
+      --good:#22c55e; --warn:#f59e0b; --bad:#ef4444; --accent:#60a5fa;
     }
+    *{box-sizing:border-box}
+    body{
+      margin:0; background:linear-gradient(180deg,#060a14,var(--bg));
+      color:var(--text); font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial;
+    }
+    header{
+      padding:18px 16px 10px;
+    }
+    h1{margin:0 0 6px; font-size:18px; letter-spacing:.2px}
+    .sub{color:var(--muted); font-size:12px}
+    .wrap{padding:0 16px 18px; max-width:760px; margin:0 auto}
+    .card{
+      background:rgba(18,26,44,.92); border:1px solid rgba(34,48,79,.75);
+      border-radius:16px; padding:14px; margin:10px 0;
+      box-shadow:0 10px 30px rgba(0,0,0,.25);
+    }
+    .row{display:flex; gap:10px; flex-wrap:wrap}
+    .col{flex:1; min-width:210px}
+    label{display:block; font-size:12px; color:var(--muted); margin:0 0 6px}
+    input,textarea,select,button{
+      width:100%; border-radius:12px; border:1px solid rgba(34,48,79,.9);
+      background:rgba(15,23,42,.9); color:var(--text);
+      padding:12px 12px; font-size:16px;
+      outline:none;
+    }
+    textarea{min-height:76px; resize:vertical; font-size:14px; line-height:1.35}
+    .hint{font-size:12px; color:var(--muted); margin-top:6px}
+    .btnRow{display:flex; gap:10px; flex-wrap:wrap}
+    button{
+      cursor:pointer; font-weight:700; border:1px solid rgba(96,165,250,.65);
+      background:linear-gradient(180deg,rgba(96,165,250,.25),rgba(96,165,250,.12));
+    }
+    button.secondary{
+      border:1px solid rgba(34,48,79,.9);
+      background:rgba(15,23,42,.6);
+      font-weight:600;
+    }
+    .pill{
+      display:inline-flex; align-items:center; gap:8px;
+      padding:9px 10px; border-radius:999px; border:1px solid rgba(34,48,79,.9);
+      background:rgba(15,23,42,.7); font-size:13px;
+    }
+    .pill b{font-size:14px}
+    .judge.good{border-color:rgba(34,197,94,.6)}
+    .judge.warn{border-color:rgba(245,158,11,.6)}
+    .judge.bad{border-color:rgba(239,68,68,.6)}
+    .grid{
+      display:grid; grid-template-columns:repeat(7, minmax(0,1fr));
+      gap:8px; margin-top:10px;
+    }
+    .chip{
+      text-align:center; padding:10px 0; border-radius:12px;
+      border:1px solid rgba(34,48,79,.9);
+      background:rgba(15,23,42,.65);
+      font-weight:800;
+    }
+    .chip small{display:block; font-weight:600; color:var(--muted); font-size:11px; margin-top:2px}
+    .list{margin-top:10px; display:grid; gap:8px}
+    .item{
+      padding:10px 12px; border-radius:14px;
+      border:1px solid rgba(34,48,79,.9);
+      background:rgba(15,23,42,.55);
+      display:flex; justify-content:space-between; align-items:center; gap:12px;
+    }
+    .mono{font-variant-numeric:tabular-nums}
+    .right{color:var(--muted); font-size:12px}
+    footer{padding:10px 16px 18px; color:var(--muted); font-size:11px}
+    .sep{height:1px; background:rgba(34,48,79,.7); margin:10px 0}
   </style>
 </head>
-
 <body>
-  <h1>ULTIMATE7</h1>
-  <p>自分専用ロジックツール</p>
+  <header class="wrap">
+    <h1>ULTIMATE7（ロト6）</h1>
+    <div class="sub">入力最小 → 母集団7を自動選出 → 7通り（7C6）を即出力</div>
+  </header>
+
+  <main class="wrap">
+    <div class="card">
+      <div class="row">
+        <div class="col">
+          <label>直近ロト6（必須 / 6個）</label>
+          <input id="lastLoto6" inputmode="numeric" placeholder="例）3 14 20 27 33 41" />
+          <div class="hint">スペース区切り / カンマ区切りOK</div>
+        </div>
+        <div class="col">
+          <label>直近ミニロト（任意 / 5個）</label>
+          <input id="lastMini" inputmode="numeric" placeholder="例）1 9 18 25 30" />
+          <div class="hint">入れると「連動ボーナス」が少し乗る</div>
+        </div>
+      </div>
+
+      <div class="sep"></div>
+
+      <div class="row">
+        <div class="col">
+          <label>（任意）最近のロト6をまとめて貼る（最大20回ぶん）</label>
+          <textarea id="recentBulk" placeholder="例）3 14 20 27 33 41
+6 11 17 24 37 41
+..."></textarea>
+          <div class="hint">あとから「頻出スコア」を強化したい時に使う枠（今は軽め）</div>
+        </div>
+      </div>
+
+      <div class="sep"></div>
+
+      <div class="btnRow">
+        <button id="btnCalc">母集団7を選出して出す</button>
+        <button class="secondary" id="btnSave">入力を保存</button>
+        <button class="secondary" id="btnReset">リセット</button>
+      </div>
+
+      <div class="sep"></div>
+
+      <div id="judge" class="pill judge warn">
+        <span>判定：</span><b id="judgeText">まだ未計算</b>
+        <span class="right" id="judgeReason"></span>
+      </div>
+
+      <div class="sep"></div>
+
+      <div class="row">
+        <div class="col">
+          <div class="pill"><span>核（母集団7）：</span><b id="core7">-</b></div>
+          <div class="hint">※「核」はツール側で自動選出（ゆうちゃんは入力ほぼ不要）</div>
+        </div>
+      </div>
+
+      <div class="grid" id="chips"></div>
+
+      <div class="sep"></div>
+
+      <div class="pill"><span>ロト6（7C6 / 7通り）：</span><b id="comboCount">0</b></div>
+      <div class="list" id="out"></div>
+    </div>
+
+    <footer>
+      ※これは統計・流れを「見える化」して選びやすくするためのツール。結果を保証するものではないよ。<br/>
+      ※次ステップで：ランキング強弱表示の精度UP／ミニロト⇄ロト6連動ロジック強化／“勝負日判定”の根拠表示 を入れていく。
+    </footer>
+  </main>
+
+<script>
+(() => {
+  const $ = (id) => document.getElementById(id);
+
+  // ---------- util ----------
+  const clamp = (v,min,max)=>Math.max(min,Math.min(max,v));
+  const uniq = (arr)=>Array.from(new Set(arr));
+  const sortNum = (a,b)=>a-b;
+
+  function parseNums(str){
+    if(!str) return [];
+    return str
+      .replace(/[，、]/g,",")
+      .replace(/\s+/g," ")
+      .replace(/,/g," ")
+      .trim()
+      .split(" ")
+      .filter(Boolean)
+      .map(x => Number(x))
+      .filter(n => Number.isFinite(n));
+  }
+
+  function inRange(n, lo, hi){ return n>=lo && n<=hi; }
+
+  // 1〜43（ロト6）
+  const MIN=1, MAX=43;
+
+  // 中央帯（例：18〜27）ボーナス
+  const CENTER_LO=18, CENTER_HI=27;
+
+  // 端点（例：<=8 or >=35）を少し意識
+  const EDGE_LO=8, EDGE_HI=35;
+
+  // 合計値（ロト6目安：ざっくり110〜180に寄せる）
+  const SUM_LO=110, SUM_HI=180;
+
+  // 大小：小(1-21) / 大(22-43)
+  function smallLarge(n){ return (n<=21) ? "S" : "L"; }
+
+  // 日付シード（同じ日は同じ結果になりやすい）
+  function daySeed(){
+    const d=new Date();
+    const y=d.getFullYear();
+    const m=d.getMonth()+1;
+    const day=d.getDate();
+    return (y*10000 + m*100 + day);
+  }
+
+  // 軽い擬似乱数（決定論）
+  function mulberry32(a){
+    return function(){
+      let t = a += 0x6D2B79F5;
+      t = Math.imul(t ^ (t >>> 15), t | 1);
+      t ^= t + Math.imul(t ^ (t >>> 7), t | 61);
+      return ((t ^ (t >>> 14)) >>> 0) / 4294967296;
+    }
+  }
+
+  // ---------- scoring ----------
+  // ベーススコア：直近引っ張り（±1,±2） + 中央密度 + 端点 + ミニロト連動 + 頻出（任意bulk）
+  function buildScoreMap(lastL6, lastMini, bulkDraws){
+    const score = new Map();
+    for(let n=MIN;n<=MAX;n++) score.set(n, 0);
+
+    // A) 直近引っ張り（ロト6の直近から：本人が言う通り「1個くらい」が現実→重み控えめ）
+    const pullSet = new Map(); // n -> weight
+    for(const x of lastL6){
+      const targets = [x, x-1, x+1, x-2, x+2];
+      const weights = [10, 6, 6, 3, 3];
+      targets.forEach((t,i)=>{
+        if(inRange(t,MIN,MAX)){
+          pullSet.set(t, (pullSet.get(t)||0) + weights[i]);
+        }
+      });
+    }
+    for(const [n,w] of pullSet.entries()){
+      score.set(n, score.get(n) + w);
+    }
+
+    // B) 中央帯ボーナス（18〜27）
+    for(let n=CENTER_LO;n<=CENTER_HI;n++){
+      score.set(n, score.get(n) + 4);
+    }
+
+    // C) 端点ボーナス（<=8 と >=35）
+    for(let n=MIN;n<=EDGE_LO;n++) score.set(n, score.get(n) + 2);
+    for(let n=EDGE_HI;n<=MAX;n++) score.set(n, score.get(n) + 2);
+
+    // D) ミニロト連動（任意：近い帯に薄く寄せる）
+    // ミニロトで出た数字そのもの（1-31）がロト6で生きることもある → 少しだけ
+    for(const x of lastMini){
+      if(inRange(x,MIN,MAX)) score.set(x, score.get(x) + 3);
+      if(inRange(x+12,MIN,MAX)) score.set(x+12, score.get(x+12) + 2); // 連動っぽいズラし
+      if(inRange(x+18,MIN,MAX)) score.set(x+18, score.get(x+18) + 1);
+    }
+
+    // E) Bulk頻出（任意：貼った分だけ加点）
+    // 1回出現 = +1、連続で貼ってるほど効く（上限あり）
+    const freq = new Map();
+    for(const draw of bulkDraws){
+      for(const x of draw){
+        if(inRange(x,MIN,MAX)){
+          freq.set(x, (freq.get(x)||0) + 1);
+        }
+      }
+    }
+    for(const [n,c] of freq.entries()){
+      score.set(n, score.get(n) + clamp(c,0,12)); // 上限12
+    }
+
+    // F) 「空白歪み」っぽい要素（シードで毎日少し違う顔）
+    const rnd = mulberry32(daySeed());
+    for(let n=MIN;n<=MAX;n++){
+      score.set(n, score.get(n) + Math.floor(rnd()*3)); // 0〜2
+    }
+
+    // G) 直近数字そのものは「被りすぎ回避」(ただし完全除外はしない)
+    // 直近と同一が多いと買いにくい → -2
+    const lastSet = new Set(lastL6);
+    for(let n=MIN;n<=MAX;n++){
+      if(lastSet.has(n)) score.set(n, score.get(n) - 2);
+    }
+
+    return {score, freq};
+  }
+
+  function pickMother7(lastL6, lastMini, bulkDraws){
+    const {score} = buildScoreMap(lastL6,lastMini,bulkDraws);
+
+    // スコア順に候補を取る
+    const ranked = [];
+    for(let n=MIN;n<=MAX;n++){
+      ranked.push({n, s: score.get(n)});
+    }
+    ranked.sort((a,b)=> b.s - a.s || a.n - b.n);
+
+    // 構造制約：中央帯 최소2、端点 最大1、連番 最大1組、大小の偏り抑制
+    const picked = [];
+    let centerCount=0;
+    let edgeCount=0;
+    let sCount=0, lCount=0;
+
+    function wouldMakeTooManyConsecutive(arr, n){
+      const a = arr.slice().sort(sortNum);
+      a.push(n); a.sort(sortNum);
+      let runs=0;
+      for(let i=0;i<a.length-1;i++){
+        if(a[i+1]===a[i]+1){ runs++; }
+      }
+      // runsが2以上だと連番が複数組になりやすい
+      return runs>=2;
+    }
+
+    for(const cand of ranked){
+      const n = cand.n;
+      if(picked.includes(n)) continue;
+
+      // 端点は最大1
+      const isEdge = (n<=EDGE_LO || n>=EDGE_HI);
+      if(isEdge && edgeCount>=1) continue;
+
+      // 連番は最大1組
+      if(wouldMakeTooManyConsecutive(picked, n)) continue;
+
+      // 大小バランス（7個中：小2〜5に収めたい）
+      const sl = smallLarge(n);
+      const ns = (sl==="S") ? sCount+1 : sCount;
+      const nl = (sl==="L") ? lCount+1 : lCount;
+      // 7個中の極端（小0/1 や 小6/7）を避ける
+      if(ns>=6 || nl>=6) continue;
+
+      // OKなら採用
+      picked.push(n);
+      if(inRange(n,CENTER_LO,CENTER_HI)) centerCount++;
+      if(isEdge) edgeCount++;
+      if(sl==="S") sCount++; else lCount++;
+
+      if(picked.length===7) break;
+    }
+
+    // もし中央帯が不足してたら補正
+    if(centerCount<2){
+      const need = 2-centerCount;
+      const centerRank = ranked.filter(x => inRange(x.n,CENTER_LO,CENTER_HI) && !picked.includes(x.n));
+      for(let i=0;i<need && i<centerRank.length;i++){
+        // 何かを外してでも入れる（スコア最下位と入れ替え）
+        picked.sort((a,b)=> score.get(a)-score.get(b)); // 低い順
+        const out = picked[0];
+        picked.shift();
+        picked.push(centerRank[i].n);
+      }
+    }
+
+    picked.sort(sortNum);
+    return {picked, score};
+  }
+
+  function combos7C6(m7){
+    // 7個から1個ずつ抜く = 7通り
+    const res=[];
+    for(let i=0;i<m7.length;i++){
+      const c = m7.filter((_,idx)=>idx!==i).slice().sort(sortNum);
+      res.push(c);
+    }
+    return res;
+  }
+
+  function judgeDay(m7, lastL6){
+    // 「勝負日」判定（軽量版）
+    // - 母7の中央帯が2以上
+    // - 端点1
+    // - 直近一致が2以下
+    // - 7C6の合計が多くSUM帯に入る率が高い
+    const center = m7.filter(n=>inRange(n,CENTER_LO,CENTER_HI)).length;
+    const edge = m7.filter(n=> (n<=EDGE_LO || n>=EDGE_HI)).length;
+    const lastSet = new Set(lastL6);
+    const same = m7.filter(n=> lastSet.has(n)).length;
+
+    const cs = combos7C6(m7);
+    let okSum=0;
+    for(const c of cs){
+      const sum = c.reduce((a,b)=>a+b,0);
+      if(sum>=SUM_LO && sum<=SUM_HI) okSum++;
+    }
+
+    // 判定ロジック
+    let level="warn";
+    let text="様子見（保険寄り）";
+    let reason=`中央${center} / 端点${edge} / 一致${same} / 合計OK${okSum}/7`;
+
+    if(center>=2 && edge===1 && same<=2 && okSum>=4){
+      level="good"; text="勝負していい日";
+    } else if(same>=3 || okSum<=2){
+      level="bad"; text="今日は見送り寄り";
+    }
+    return {level, text, reason};
+  }
+
+  function renderChips(m7, score){
+    const chips = $("chips");
+    chips.innerHTML="";
+    for(const n of m7){
+      const s = score.get(n);
+      const div=document.createElement("div");
+      div.className="chip mono";
+      div.innerHTML = `${String(n).padStart(2,"0")}<small>score ${s}</small>`;
+      chips.appendChild(div);
+    }
+    // 7個未満時の埋め
+    for(let i=m7.length;i<7;i++){
+      const div=document.createElement("div");
+      div.className="chip mono";
+      div.innerHTML = `--<small>score -</small>`;
+      chips.appendChild(div);
+    }
+  }
+
+  function renderCombos(cs){
+    $("comboCount").textContent = cs.length;
+    const out=$("out");
+    out.innerHTML="";
+    cs.forEach((c, idx)=>{
+      const sum = c.reduce((a,b)=>a+b,0);
+      const odd = c.filter(n=>n%2===1).length;
+      const even = 6-odd;
+      const small = c.filter(n=>smallLarge(n)==="S").length;
+      const large = 6-small;
+
+      const div=document.createElement("div");
+      div.className="item mono";
+      div.innerHTML = `
+        <div><b>候補${idx+1}</b>　${c.map(n=>String(n).padStart(2,"0")).join(" ")}</div>
+        <div class="right">Σ${sum} / 奇偶${odd}:${even} / 小大${small}:${large}</div>
+      `;
+      out.appendChild(div);
+    });
+  }
+
+  function setJudge(level, text, reason){
+    const j = $("judge");
+    j.classList.remove("good","warn","bad");
+    j.classList.add(level);
+    $("judgeText").textContent = text;
+    $("judgeReason").textContent = `(${reason})`;
+  }
+
+  // ---------- actions ----------
+  function loadSaved(){
+    try{
+      const s = JSON.parse(localStorage.getItem("u7_loto6")||"{}");
+      if(s.lastLoto6) $("lastLoto6").value = s.lastLoto6;
+      if(s.lastMini) $("lastMini").value = s.lastMini;
+      if(s.recentBulk) $("recentBulk").value = s.recentBulk;
+    }catch(e){}
+  }
+
+  function saveNow(){
+    const payload = {
+      lastLoto6: $("lastLoto6").value.trim(),
+      lastMini: $("lastMini").value.trim(),
+      recentBulk: $("recentBulk").value.trim(),
+      savedAt: Date.now()
+    };
+    localStorage.setItem("u7_loto6", JSON.stringify(payload));
+    setJudge("good","保存した", "入力をローカルに保存");
+  }
+
+  function resetAll(){
+    $("lastLoto6").value="";
+    $("lastMini").value="";
+    $("recentBulk").value="";
+    $("core7").textContent="-";
+    $("comboCount").textContent="0";
+    $("out").innerHTML="";
+    $("chips").innerHTML="";
+    setJudge("warn","まだ未計算", "");
+  }
+
+  function calc(){
+    const lastL6 = parseNums($("lastLoto6").value).filter(n=>inRange(n,MIN,MAX));
+    if(lastL6.length!==6){
+      setJudge("bad","入力不足", "ロト6は6個入れてね");
+      return;
+    }
+
+    const lastMini = parseNums($("lastMini").value).filter(n=>inRange(n,1,31));
+    const bulkLines = ($("recentBulk").value||"").split("\n").map(x=>parseNums(x).filter(n=>inRange(n,MIN,MAX)));
+    const bulkDraws = bulkLines.filter(a=>a.length===6).slice(0,20);
+
+    const {picked, score} = pickMother7(lastL6, lastMini, bulkDraws);
+    $("core7").textContent = picked.map(n=>String(n).padStart(2,"0")).join(" ");
+
+    renderChips(picked, score);
+    const cs = combos7C6(picked);
+    renderCombos(cs);
+
+    const j = judgeDay(picked, lastL6);
+    setJudge(j.level, j.text, j.reason);
+  }
+
+  $("btnCalc").addEventListener("click", calc);
+  $("btnSave").addEventListener("click", saveNow);
+  $("btnReset").addEventListener("click", resetAll);
+
+  // 初期化
+  loadSaved();
+  setJudge("warn","準備OK", "ロト6の直近6個を入れてね");
+
+  // Service Worker（sw.js がある時だけ動く）
+  if ("serviceWorker" in navigator) {
+    navigator.serviceWorker.register("./sw.js").catch(()=>{});
+  }
+})();
+</script>
 </body>
 </html>
