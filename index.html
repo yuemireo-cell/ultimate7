@@ -1,72 +1,30 @@
 <!DOCTYPE html>
 <html lang="ja">
-<link rel="manifest" href="./manifest.json">
-<meta name="theme-color" content="#0f172a">
-<link rel="apple-touch-icon" href="./icon.png"><head>
+<head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
   <title>ULTIMATE7</title>
 
   <!-- PWA設定 -->
-  <link rel="manifest" href="manifest.json">
+  <link rel="manifest" href="./manifest.json">
   <meta name="theme-color" content="#0f172a">
-  <link rel="apple-touch-icon" href="icon.png">
+  <link rel="apple-touch-icon" href="./icon.png">
 
   <style>
     body {
       margin: 0;
-      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      font-family: -apple-system, BlinkMacSystemFont, "Helvetica Neue", sans-serif;
       background: #0f172a;
-      color: #e5e7eb;
+      color: #fff;
       text-align: center;
-    }
-    header {
-      padding: 20px;
-      font-size: 24px;
-      font-weight: bold;
-    }
-    .card {
-      background: #111827;
-      margin: 16px;
-      padding: 20px;
-      border-radius: 12px;
-    }
-    button {
-      width: 90%;
-      padding: 16px;
-      font-size: 18px;
-      border-radius: 12px;
-      border: none;
-      background: #22c55e;
-      color: #022c22;
-      font-weight: bold;
-      margin-top: 12px;
-    }
-    .result {
-      margin-top: 16px;
-      font-size: 20px;
-      letter-spacing: 2px;
+      padding-top: 40px;
     }
   </style>
 </head>
+
 <body>
-
-<header>ULTIMATE7</header>
-
-<div class="card">
-  <p>🔮 今日の勝負母集団（7）</p>
-  <button onclick="generate()">生成する</button>
-  <div class="result" id="result"></div>
-</div>
-
-<script>
-function generate() {
-  const base = [14,18,20,23,25,27,30];
-  const shuffled = base.sort(() => 0.5 - Math.random());
-  document.getElementById("result").innerText =
-    shuffled.join(" ・ ");
-}
-</script>
-
+  <h1>ULTIMATE7</h1>
+  <p>自分専用ロジックツール</p>
 </body>
 </html>
