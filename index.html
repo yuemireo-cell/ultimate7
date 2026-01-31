@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>最強777 v6.1</title>
+<title>最強777 v6.2</title>
 
 <style>
 :root{
@@ -34,7 +34,7 @@ border-radius:18px;padding:14px;margin-bottom:14px}
   text-align:center;font-size:18px;font-weight:800;
 }
 
-/* ===== ここが“写真のコード”相当：横1列を強制（iPhoneでも折り返さない） ===== */
+/* ===== 横1列を強制（iPhoneでも折り返さない） ===== */
 .boxrow.l6,
 .boxrow.mini{
   display:flex !important;
@@ -51,7 +51,7 @@ border-radius:18px;padding:14px;margin-bottom:14px}
   font-size:18px !important;
   padding:0 !important;
 }
-/* 画面が狭い時だけ、少しだけ小さくして1列に収める */
+/* 画面が狭い時だけ少し縮小 */
 @media (max-width: 420px){
   .boxrow.l6,
   .boxrow.mini{ gap:6px !important; }
@@ -88,12 +88,22 @@ padding:10px;margin-top:10px}
 .chip.strong{color:#bbf7d0;border-color:rgba(34,197,94,.4)}
 .chip.warn{color:#fde68a;border-color:rgba(250,204,21,.4)}
 .chip.bad{color:#fecaca;border-color:rgba(239,68,68,.4)}
+.chip.on{color:#e0e7ff;border-color:rgba(129,140,248,.35)}
 
 textarea{width:100%;min-height:60px;background:#020617;
 border:1px solid var(--line);color:var(--text);
 border-radius:12px;padding:8px}
 
 /* ===== ヒートマップ ===== */
+.heathead{
+  display:flex;align-items:center;justify-content:space-between;
+  gap:10px;flex-wrap:wrap
+}
+.heatlabel{
+  font-size:12px;color:var(--muted);
+  border:1px solid var(--line);background:var(--chip);
+  padding:6px 10px;border-radius:999px;
+}
 .heatmap{
   display:grid;
   grid-template-columns:repeat(7,1fr);
@@ -152,12 +162,22 @@ border-radius:12px;padding:8px}
   <button onclick="showStrong()">★★★のみ</button>
   <button onclick="showAll()">全表示</button>
 </div>
+<div class="meta">
+ロト6だけ入力→ロト6だけ出力OK / ミニロトだけ入力→ミニロトだけ出力OK
+</div>
 </div>
 
 <div class="card">
-<h3>数字別ヒートマップ</h3>
-<div class="heatmap" id="heatmap"></div>
-<div class="meta">枠線＝母集団 / ↑↓＝直近トレンド</div>
+  <div class="heathead">
+    <h3 style="margin:0">数字別ヒートマップ</h3>
+    <span class="heatlabel" id="heatLabel">—</span>
+  </div>
+  <div class="btnrow" style="margin-top:10px">
+    <button onclick="setHeatMode('l6')">ロト6ヒートマップ</button>
+    <button onclick="setHeatMode('mini')">ミニロトヒートマップ</button>
+  </div>
+  <div class="heatmap" id="heatmap"></div>
+  <div class="meta">枠線＝母集団 / ↑↓＝直近トレンド</div>
 </div>
 
 <div class="card">
@@ -182,6 +202,16 @@ border-radius:12px;padding:8px}
 </div>
 
 <script>
+/* =========================
+   状態
+========================= */
+let STATE = {
+  heatMode: "l6", // "l6" or "mini"
+  lastInputs: { l6:null, mini:null },
+  pools: { l6:null, mini:null },
+  history: []
+};
+
 /* =========================
    共通（入力・判定）
 ========================= */
@@ -230,6 +260,8 @@ function trendOf(n,history){
 
 /* =========================
    ヒートマップ
+   - max: ロト6=43 / ミニロト=31
+   - selected: 母集団（枠線）
 ========================= */
 function buildHeatmap(history,max,selected){
   const map=document.getElementById("heatmap");
@@ -248,6 +280,35 @@ function buildHeatmap(history,max,selected){
     d.innerHTML=`${String(n).padStart(2,"0")}<span class="trend">${trendOf(n,history)}</span>`;
     map.appendChild(d);
   }
+}
+
+function setHeatMode(mode){
+  STATE.heatMode = mode;
+  refreshHeatmap();
+}
+
+function refreshHeatmap(){
+  const label = document.getElementById("heatLabel");
+
+  if(STATE.heatMode==="l6"){
+    if(!STATE.pools.l6){
+      label.textContent = "ロト6：未生成（ロト6を入力して予想生成）";
+      document.getElementById("heatmap").innerHTML="";
+      return;
+    }
+    label.textContent = "ロト6（1〜43）";
+    buildHeatmap(STATE.history, 43, STATE.pools.l6.pool);
+    return;
+  }
+
+  // mini
+  if(!STATE.pools.mini){
+    label.textContent = "ミニロト：未生成（ミニロトを入力して予想生成）";
+    document.getElementById("heatmap").innerHTML="";
+    return;
+  }
+  label.textContent = "ミニロト（1〜31）";
+  buildHeatmap(STATE.history, 31, STATE.pools.mini.pool);
 }
 
 /* =========================
@@ -323,7 +384,6 @@ function buildPoolStrict(last,max,size,history){
   const picked = pickCandidates(max, new Set([...ban, pull]), history, need);
   picked.forEach(n=>pool.push(n));
 
-  // 最終安全チェック：前回との一致は必ず1
   const ov = overlapCount(pool,last);
   if(ov!==1){
     let cleaned = pool.filter(n => n===pull || !ban.has(n));
@@ -453,37 +513,87 @@ function renderTickets(rootId,list,last,history,type,pull){
 }
 
 /* =========================
-   メイン
+   メイン（ここが改良点）
+   - ロト6だけでもOK
+   - ミニロトだけでもOK
 ========================= */
 function calc(){
-  const l6=read("l6",6,43);
-  const m=read("mini",5,31);
-  if(!l6||!m){ alert("入力不足（ロト6=6個 / ミニロト=5個、重複なし）"); return; }
+  const l6 = read("l6",6,43);     // ロト6は入っていれば配列、未入力ならnull
+  const m  = read("mini",5,31);   // ミニロトも同じ
+
+  if(!l6 && !m){
+    alert("入力不足（ロト6=6個 or ミニロト=5個 のどちらかは必要）");
+    return;
+  }
 
   const h=parseHistory();
+  STATE.history = h;
 
-  const p6=buildPoolStrict(l6,43,7,h);
-  const pm=buildPoolStrict(m,31,6,h);
+  // ---- ロト6 ----
+  if(l6){
+    const p6=buildPoolStrict(l6,43,7,h);
+    STATE.lastInputs.l6 = l6;
+    STATE.pools.l6 = p6;
 
-  buildHeatmap(h,43,p6.pool);
+    document.getElementById("pool6").textContent=p6.pool.map(x=>String(x).padStart(2,"0")).join(" ");
+    document.getElementById("meta6").textContent=`固定（引っ張り1）:${String(p6.pull).padStart(2,"0")} ／ 他の前回数字は除外（強制）`;
+    renderTickets("out6", comb(p6.pool,6), l6, h, "l6", p6.pull);
+  }else{
+    STATE.lastInputs.l6 = null;
+    STATE.pools.l6 = null;
+    document.getElementById("pool6").textContent="—";
+    document.getElementById("meta6").textContent="ロト6未入力（ロト6だけ予想したいならロト6を6個入力）";
+    document.getElementById("out6").innerHTML="";
+  }
 
-  document.getElementById("pool6").textContent=p6.pool.map(x=>String(x).padStart(2,"0")).join(" ");
-  document.getElementById("meta6").textContent=`固定（引っ張り1）:${String(p6.pull).padStart(2,"0")} ／ 他の前回数字は除外（強制）`;
+  // ---- ミニロト ----
+  if(m){
+    const pm=buildPoolStrict(m,31,6,h);
+    STATE.lastInputs.mini = m;
+    STATE.pools.mini = pm;
 
-  document.getElementById("poolM").textContent=pm.pool.map(x=>String(x).padStart(2,"0")).join(" ");
-  document.getElementById("metaM").textContent=`固定（引っ張り1）:${String(pm.pull).padStart(2,"0")} ／ 他の前回数字は除外（強制）`;
+    document.getElementById("poolM").textContent=pm.pool.map(x=>String(x).padStart(2,"0")).join(" ");
+    document.getElementById("metaM").textContent=`固定（引っ張り1）:${String(pm.pull).padStart(2,"0")} ／ 他の前回数字は除外（強制）`;
+    renderTickets("outM", comb(pm.pool,5), m,  h, "mini", pm.pull);
+  }else{
+    STATE.lastInputs.mini = null;
+    STATE.pools.mini = null;
+    document.getElementById("poolM").textContent="—";
+    document.getElementById("metaM").textContent="ミニロト未入力（ミニロトだけ予想したいならミニロトを5個入力）";
+    document.getElementById("outM").innerHTML="";
+  }
 
-  renderTickets("out6", comb(p6.pool,6), l6, h, "l6", p6.pull);
-  renderTickets("outM", comb(pm.pool,5), m,  h, "mini", pm.pull);
+  // ---- ヒートマップ：入力がある方に自動寄せ ----
+  if(STATE.heatMode==="l6" && !STATE.pools.l6 && STATE.pools.mini) STATE.heatMode="mini";
+  if(STATE.heatMode==="mini" && !STATE.pools.mini && STATE.pools.l6) STATE.heatMode="l6";
+  refreshHeatmap();
 
   judge();
 }
 
+/* =========================
+   勝負日判定（入力された側だけで判定）
+========================= */
 function judge(){
-  const a=document.querySelectorAll("#out6 .star3").length;
-  const b=document.querySelectorAll("#outM .star3").length;
+  const a = document.querySelectorAll("#out6 .star3").length;
+  const b = document.querySelectorAll("#outM .star3").length;
   const el=document.getElementById("battle");
 
+  const hasL6 = !!STATE.pools.l6;
+  const hasM  = !!STATE.pools.mini;
+
+  if(hasL6 && !hasM){
+    if(a>=3) el.textContent="今日はロト6全力（勝負日）";
+    else el.textContent="今日はロト6寄せ";
+    return;
+  }
+  if(!hasL6 && hasM){
+    if(b>=3) el.textContent="今日はミニロト厚め（勝負日）";
+    else el.textContent="今日はミニロト寄せ";
+    return;
+  }
+
+  // 両方あるときは従来通り比較
   if(a>=3 && a>b) el.textContent="今日はロト6全力（勝負日）";
   else if(b>=3 && b>a) el.textContent="今日はミニロト厚め（勝負日）";
   else if(a>b) el.textContent="今日はロト6寄せ";
