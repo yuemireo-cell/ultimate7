@@ -346,10 +346,14 @@
       if(pull) mother.push(pull);
 
       for(const x of scored){
-        if(mother.length>=wantCount) break;
-        if(mother.includes(x.n)) continue;
-        mother.push(x.n);
-      }
+  if(mother.length>=wantCount) break;
+  if(mother.includes(x.n)) continue;
+
+  // ★重要：前回数字は「引っ張り1個」以外は入れない
+  if(lastSet.has(x.n) && x.n !== pull) continue;
+
+  mother.push(x.n);
+}
 
       mother.sort((a,b)=>a-b);
 
