@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>最強777 v6.0</title>
+<title>最強777 v6.1</title>
 
 <style>
 :root{
@@ -11,6 +11,7 @@
   --text:#e5e7eb;--muted:#94a3b8;
   --hot:#ef4444;--warm:#facc15;--cold:#38bdf8;
   --star3:#22c55e;--star2:#facc15;--star1:#ef4444;
+  --chip:#0b1220;
 }
 *{box-sizing:border-box}
 body{margin:0;background:var(--bg);color:var(--text);
@@ -28,21 +29,30 @@ border-radius:18px;padding:14px;margin-bottom:14px}
 .nbox{height:48px;border-radius:12px;border:1px solid var(--line);
 background:#020617;color:var(--text);text-align:center;font-size:18px}
 
-.btnrow{display:flex;gap:10px;margin-top:10px}
-button{flex:1;height:44px;border-radius:14px;border:1px solid var(--line);
-background:#020617;color:var(--text);font-weight:700}
+.btnrow{display:flex;gap:10px;margin-top:10px;flex-wrap:wrap}
+button{flex:1;min-width:140px;height:44px;border-radius:14px;border:1px solid var(--line);
+background:#020617;color:var(--text);font-weight:800}
 
-.pool{text-align:center;font-size:20px;font-weight:800}
-.meta{text-align:center;font-size:12px;color:var(--muted)}
+.pool{text-align:center;font-size:20px;font-weight:900;letter-spacing:1px}
+.meta{text-align:center;font-size:12px;color:var(--muted);margin-top:6px}
 
 .ticket{border:1px solid var(--line);border-radius:14px;
-padding:10px;margin-top:8px}
-.stars{text-align:center;font-size:20px;font-weight:900}
+padding:10px;margin-top:10px}
+.stars{text-align:center;font-size:20px;font-weight:900;margin-bottom:4px}
 .star3{color:var(--star3)}
 .star2{color:var(--star2)}
 .star1{color:var(--star1)}
-.nums{text-align:center;font-size:18px;font-weight:700;letter-spacing:2px}
-.tags{text-align:center;font-size:11px;color:var(--muted)}
+.nums{text-align:center;font-size:18px;font-weight:800;letter-spacing:2px;margin:2px 0 6px}
+.chips{display:flex;gap:6px;flex-wrap:wrap;justify-content:center}
+.chip{
+  font-size:11px;color:var(--muted);
+  border:1px solid var(--line);
+  background:var(--chip);
+  padding:4px 8px;border-radius:999px;
+}
+.chip.strong{color:#bbf7d0;border-color:rgba(34,197,94,.4)}
+.chip.warn{color:#fde68a;border-color:rgba(250,204,21,.4)}
+.chip.bad{color:#fecaca;border-color:rgba(239,68,68,.4)}
 
 textarea{width:100%;min-height:60px;background:#020617;
 border:1px solid var(--line);color:var(--text);
@@ -57,12 +67,12 @@ border-radius:12px;padding:8px}
 .hm{
   position:relative;
   text-align:center;padding:6px 0;
-  border-radius:10px;font-size:12px;font-weight:800;
+  border-radius:10px;font-size:12px;font-weight:900;
   border:1px solid var(--line)
 }
 .hm.hot{background:rgba(239,68,68,.25);color:var(--hot)}
-.hm.warm{background:rgba(250,204,21,.25);color:var(--warm)}
-.hm.cold{background:rgba(56,189,248,.25);color:var(--cold)}
+.hm.warm{background:rgba(250,204,21,.22);color:var(--warm)}
+.hm.cold{background:rgba(56,189,248,.22);color:var(--cold)}
 .hm.sel{outline:2px solid #e5e7eb}
 .trend{
   position:absolute;right:6px;top:2px;
@@ -76,28 +86,36 @@ border-radius:12px;padding:8px}
 
 <h1>最強777</h1>
 <div class="sub">
-一致1固定｜連番必須｜精密引っ張り｜ヒートマップ×トレンド
+一致は必ず1個（引っ張り固定1）｜連番必須｜精密引っ張り｜ヒートマップ×トレンド
 </div>
 
 <div class="card">
 <h3>ロト6（前回）</h3>
 <div class="boxrow l6" id="l6">
-<input class="nbox"><input class="nbox"><input class="nbox">
-<input class="nbox"><input class="nbox"><input class="nbox">
+  <input class="nbox" inputmode="numeric" placeholder="--">
+  <input class="nbox" inputmode="numeric" placeholder="--">
+  <input class="nbox" inputmode="numeric" placeholder="--">
+  <input class="nbox" inputmode="numeric" placeholder="--">
+  <input class="nbox" inputmode="numeric" placeholder="--">
+  <input class="nbox" inputmode="numeric" placeholder="--">
 </div>
 
-<h3 style="margin-top:8px">ミニロト（前回）</h3>
+<h3 style="margin-top:10px">ミニロト（前回）</h3>
 <div class="boxrow mini" id="mini">
-<input class="nbox"><input class="nbox"><input class="nbox">
-<input class="nbox"><input class="nbox">
+  <input class="nbox" inputmode="numeric" placeholder="--">
+  <input class="nbox" inputmode="numeric" placeholder="--">
+  <input class="nbox" inputmode="numeric" placeholder="--">
+  <input class="nbox" inputmode="numeric" placeholder="--">
+  <input class="nbox" inputmode="numeric" placeholder="--">
 </div>
 
-<h3 style="margin-top:8px">過去履歴（貼り付け）</h3>
-<textarea id="history" placeholder="各回を改行で貼り付け"></textarea>
+<h3 style="margin-top:10px">過去履歴（貼り付け）</h3>
+<textarea id="history" placeholder="例：03 10 12 20 31 11（改行で複数行OK）"></textarea>
 
 <div class="btnrow">
-<button onclick="calc()">予想生成</button>
-<button onclick="showStrong()">★★★のみ</button>
+  <button onclick="calc()">予想生成</button>
+  <button onclick="showStrong()">★★★のみ</button>
+  <button onclick="showAll()">全表示</button>
 </div>
 </div>
 
@@ -129,154 +147,359 @@ border-radius:12px;padding:8px}
 </div>
 
 <script>
-/* ===== 共通 ===== */
+/* =========================
+   共通（入力・判定）
+========================= */
 function read(id,c,max){
- const v=[...document.querySelectorAll("#"+id+" .nbox")]
- .map(x=>x.value).filter(x=>x!=="").map(Number);
- if(v.length!==c||new Set(v).size!==v.length) return null;
- if(v.some(n=>n<1||n>max)) return null;
- return v.sort((a,b)=>a-b);
+  const v=[...document.querySelectorAll("#"+id+" .nbox")]
+    .map(x=>String(x.value||"").trim())
+    .filter(x=>x!=="")
+    .map(Number);
+
+  if(v.length!==c) return null;
+  if(v.some(n=>Number.isNaN(n))) return null;
+  if(new Set(v).size!==v.length) return null;
+  if(v.some(n=>n<1||n>max)) return null;
+  return v.sort((a,b)=>a-b);
 }
 function hasSeq(a){
- for(let i=0;i<a.length-1;i++) if(a[i+1]-a[i]===1) return true;
- return false;
+  for(let i=0;i<a.length-1;i++) if(a[i+1]-a[i]===1) return true;
+  return false;
+}
+function overlapCount(a,b){
+  const set=new Set(b);
+  return a.filter(x=>set.has(x)).length;
 }
 function parseHistory(){
- return document.getElementById("history").value
- .split("\n").map(r=>r.trim().split(/\s+/).map(Number))
- .filter(r=>r.length>0);
+  const raw=document.getElementById("history").value.trim();
+  if(!raw) return [];
+  return raw
+    .split("\n")
+    .map(r=>r.trim())
+    .filter(r=>r.length>0)
+    .map(r=>r.split(/\s+/).map(Number).filter(n=>!Number.isNaN(n)));
 }
 
-/* ===== トレンド ===== */
+/* =========================
+   トレンド
+========================= */
 function trendOf(n,history){
- if(history.length<4) return "→";
- const half=Math.floor(history.length/2);
- const a=history.slice(0,half).filter(h=>h.includes(n)).length;
- const b=history.slice(half).filter(h=>h.includes(n)).length;
- if(b>a) return "↑";
- if(b<a) return "↓";
- return "→";
+  if(history.length<4) return "→";
+  const half=Math.floor(history.length/2);
+  const a=history.slice(0,half).filter(h=>h.includes(n)).length;
+  const b=history.slice(half).filter(h=>h.includes(n)).length;
+  if(b>a) return "↑";
+  if(b<a) return "↓";
+  return "→";
 }
 
-/* ===== ヒートマップ ===== */
+/* =========================
+   ヒートマップ
+========================= */
 function buildHeatmap(history,max,selected){
- const map=document.getElementById("heatmap");
- map.innerHTML="";
- for(let n=1;n<=max;n++){
-  let gap=0,freq=0;
-  for(let h of history){if(h.includes(n))break;gap++}
-  history.forEach(h=>{if(h.includes(n))freq++});
-  let cls="warm";
-  if(gap>=5) cls="hot";
-  else if(freq>=3) cls="cold";
+  const map=document.getElementById("heatmap");
+  map.innerHTML="";
+  for(let n=1;n<=max;n++){
+    let gap=0,freq=0;
+    for(let h of history){ if(h.includes(n)) break; gap++; }
+    history.forEach(h=>{ if(h.includes(n)) freq++; });
 
-  const d=document.createElement("div");
-  d.className="hm "+cls+(selected.includes(n)?" sel":"");
-  d.innerHTML=`${n}<span class="trend">${trendOf(n,history)}</span>`;
-  map.appendChild(d);
- }
+    let cls="warm";
+    if(gap>=5) cls="hot";
+    else if(freq>=3) cls="cold";
+
+    const d=document.createElement("div");
+    d.className="hm "+cls+(selected.includes(n)?" sel":"");
+    d.innerHTML=`${String(n).padStart(2,"0")}<span class="trend">${trendOf(n,history)}</span>`;
+    map.appendChild(d);
+  }
 }
 
-/* ===== 精密引っ張り ===== */
+/* =========================
+   精密引っ張り（前回から1個）
+   ※ここで「唯一の一致」を決める
+========================= */
 function pickPullAdvanced(last,history){
- const avg=last.reduce((a,b)=>a+b)/last.length;
- let best=last[0],bestScore=-1;
- last.forEach(n=>{
-  let s=0;
-  s+=5-Math.min(Math.abs(n-avg),5);
-  let g=0;for(let h of history){if(h.includes(n))break;g++}
-  s+=Math.min(g,5);
-  let f=0;history.forEach(h=>{if(h.includes(n))f++});
-  if(f<=1)s+=2;
-  if(n>=10&&n<=30)s+=1;
-  if(s>bestScore){bestScore=s;best=n}
- });
- return best;
+  // historyが無い場合でも安定して選ぶ
+  const avg=last.reduce((a,b)=>a+b,0)/last.length;
+  let best=last[0], bestScore=-1;
+
+  last.forEach(n=>{
+    let s=0;
+
+    // 平均への近さ（中央寄り）
+    s += 6 - Math.min(Math.abs(n-avg), 6);
+
+    // GAP（直近出てないほど↑）
+    let g=0; for(let h of history){ if(h.includes(n)) break; g++; }
+    s += Math.min(g, 6);
+
+    // 出現頻度（少なすぎは上げる／多すぎは下げる）
+    let f=0; history.forEach(h=>{ if(h.includes(n)) f++; });
+    if(f<=1) s += 3;
+    if(f>=4) s -= 2;
+
+    // ゾーン補正（ロト6だと 10-30 を少し厚め）
+    if(n>=10 && n<=30) s += 1;
+
+    if(s>bestScore){ bestScore=s; best=n; }
+  });
+
+  return best;
 }
 
-/* ===== プール ===== */
-function buildPool(last,max,size,history){
- const pull=pickPullAdvanced(last,history);
- const ban=new Set(last.filter(n=>n!==pull));
- const p=[pull];
- for(let i=1;i<=max&&p.length<size;i++){
-  if(!ban.has(i)&&!p.includes(i)) p.push(i);
- }
- return {pool:p.sort((a,b)=>a-b),pull};
+/* =========================
+   追加候補の選び方（前回以外から）
+   → 「前回数字が混ざる」事故を物理的に防ぐ
+========================= */
+function pickCandidates(max,banSet,history,needCount){
+  // 1..max の候補をスコア付けして上位から取る
+  const cand=[];
+  for(let n=1;n<=max;n++){
+    if(banSet.has(n)) continue;
+    let s=0;
+
+    // GAP（出てないほど上げる）
+    let g=0; for(let h of history){ if(h.includes(n)) break; g++; }
+    s += Math.min(g, 6) * 1.2;
+
+    // 頻度（ほどほど優遇）
+    let f=0; history.forEach(h=>{ if(h.includes(n)) f++; });
+    if(f===0) s += 1.5;
+    if(f===1) s += 1.0;
+    if(f>=4) s -= 1.5;
+
+    // トレンド（↑微上げ／↓微下げ）
+    const t=trendOf(n,history);
+    if(t==="↑") s += 0.7;
+    if(t==="↓") s -= 0.3;
+
+    cand.push({n,s});
+  }
+  cand.sort((a,b)=>b.s-a.s);
+  return cand.slice(0,needCount).map(x=>x.n);
 }
+
+/* =========================
+   プール生成（重要）
+   ルール：
+   - 前回数字は「pull だけ」入れる
+   - 他の前回数字は「絶対に入れない」
+========================= */
+function buildPoolStrict(last,max,size,history){
+  const pull = pickPullAdvanced(last,history);
+
+  // ban = 前回数字すべて（pull以外）＋ pull自身は重複防止で別管理
+  const ban = new Set(last.filter(n=>n!==pull));
+  // ここが最強の保険：banに入ってる数字は母集団に入らない
+
+  const pool=[pull];
+  const need=size-1;
+
+  const picked = pickCandidates(max, new Set([...ban, pull]), history, need);
+  picked.forEach(n=>pool.push(n));
+
+  // 最終安全チェック：前回との一致は必ず1
+  const ov = overlapCount(pool,last);
+  if(ov!==1){
+    // もし何かがおかしくても事故らせない
+    // pull 以外に前回数字が混じってたら排除して埋め直す
+    let cleaned = pool.filter(n => n===pull || !ban.has(n));
+    cleaned = Array.from(new Set(cleaned));
+    while(cleaned.length<size){
+      const more = pickCandidates(max, new Set([...ban, ...cleaned]), history, 1);
+      if(more.length===0) break;
+      cleaned.push(more[0]);
+    }
+    return {pool:cleaned.sort((a,b)=>a-b), pull};
+  }
+
+  return {pool:pool.sort((a,b)=>a-b), pull};
+}
+
 function comb(a,k){
- const r=[];const f=(s,c)=>{
-  if(c.length===k){r.push([...c]);return;}
-  for(let i=s;i<a.length;i++){c.push(a[i]);f(i+1,c);c.pop();}
- };f(0,[]);return r;
+  const r=[];
+  const f=(s,c)=>{
+    if(c.length===k){ r.push([...c]); return; }
+    for(let i=s;i<a.length;i++){ c.push(a[i]); f(i+1,c); c.pop(); }
+  };
+  f(0,[]);
+  return r;
 }
 
-/* ===== スコア ===== */
-function score(t,last,history){
- let s=0;
- if(hasSeq(t))s+=5;
- if(t.filter(n=>last.includes(n)).length===1)s+=5;
- t.forEach(n=>{
-  let g=0;for(let h of history){if(h.includes(n))break;g++}
-  s+=Math.min(g,5);
- });
- return s;
-}
-function stars(s){if(s>=15)return 3;if(s>=11)return 2;return 1;}
-
-/* ===== 描画 ===== */
-function render(id,list,last,history){
- const root=document.getElementById(id);root.innerHTML="";
- list.forEach(o=>{
-  if(!hasSeq(o)||o.filter(n=>last.includes(n)).length!==1)return;
-  const sc=score(o,last,history);
-  const st=stars(sc);
-  const d=document.createElement("div");
-  d.className="ticket";
-  d.innerHTML=`
-   <div class="stars star${st}">${"★".repeat(st)}</div>
-   <div class="nums">${o.join(" ")}</div>
-   <div class="tags">Score:${sc}</div>`;
-  root.appendChild(d);
- });
+/* =========================
+   スコア（厳しめ）
+   - 連番あり：加点
+   - 一致=1：加点（固定前提）
+   - GAP / トレンド：加点
+========================= */
+function zoneCount(nums, type){
+  // ロト6: 1-15 / 16-31 / 32-43
+  // ミニロト: 1-10 / 11-20 / 21-31
+  let s=0,m=0,l=0;
+  nums.forEach(n=>{
+    if(type==="l6"){
+      if(n<=15) s++; else if(n<=31) m++; else l++;
+    }else{
+      if(n<=10) s++; else if(n<=20) m++; else l++;
+    }
+  });
+  return {s,m,l};
 }
 
-/* ===== メイン ===== */
+function scoreTicket(t,last,history,type){
+  let s=0;
+
+  // 連番（必須だけど、強く評価）
+  if(hasSeq(t)) s += 6;
+
+  // 一致（必ず1のはず）
+  const ov = overlapCount(t,last);
+  if(ov===1) s += 8;
+  else s -= 999; // 絶対に出さない保険
+
+  // GAP（各数字）
+  t.forEach(n=>{
+    let g=0; for(let h of history){ if(h.includes(n)) break; g++; }
+    s += Math.min(g, 6) * 1.1;
+  });
+
+  // トレンド（↑少し加点）
+  t.forEach(n=>{
+    const tr=trendOf(n,history);
+    if(tr==="↑") s += 0.4;
+    if(tr==="↓") s -= 0.1;
+  });
+
+  // ゾーンの偏り（極端すぎは微減点）
+  const z=zoneCount(t,type);
+  const maxZ=Math.max(z.s,z.m,z.l);
+  if(maxZ>=5) s -= 1.2;
+
+  return Math.round(s*10)/10;
+}
+
+// ★の閾値（厳しめ）
+function stars(sc){
+  if(sc>=20.0) return 3;
+  if(sc>=16.0) return 2;
+  return 1;
+}
+function labelByStar(st){
+  if(st===3) return {txt:"強い", cls:"strong"};
+  if(st===2) return {txt:"強気", cls:"warn"};
+  return {txt:"堅い", cls:"bad"};
+}
+
+/* =========================
+   描画（重要：一致=1を強制）
+========================= */
+function renderTickets(rootId,list,last,history,type,pull){
+  const root=document.getElementById(rootId);
+  root.innerHTML="";
+
+  const keep=[];
+
+  list.forEach(t=>{
+    // ① 連番必須
+    if(!hasSeq(t)) return;
+
+    // ② pull を必ず含む（＝一致の中身を固定）
+    if(!t.includes(pull)) return;
+
+    // ③ 一致（前回との共通）は必ず1個だけ
+    const ov = overlapCount(t,last);
+    if(ov!==1) return;
+
+    // ④ pull以外の前回数字が混ざってないこと（念のため）
+    const others = last.filter(n=>n!==pull);
+    if(t.some(n=>others.includes(n))) return;
+
+    const sc = scoreTicket(t,last,history,type);
+    const st = stars(sc);
+    keep.push({t,sc,st});
+  });
+
+  // スコア高い順に並べる
+  keep.sort((a,b)=>b.sc-a.sc);
+
+  keep.forEach(o=>{
+    const st=o.st;
+    const lab=labelByStar(st);
+    const z=zoneCount(o.t,type);
+
+    const d=document.createElement("div");
+    d.className="ticket";
+    d.innerHTML=`
+      <div class="stars star${st}">${"★".repeat(st)}</div>
+      <div class="nums">${o.t.map(x=>String(x).padStart(2,"0")).join(" ")}</div>
+      <div class="chips">
+        <span class="chip ${lab.cls}">${lab.txt}</span>
+        <span class="chip">一致:1</span>
+        <span class="chip">連番:${countSeqPairs(o.t)}</span>
+        <span class="chip">小中大:${z.s}-${z.m}-${z.l}</span>
+        <span class="chip">Score:${o.sc}</span>
+      </div>
+    `;
+    root.appendChild(d);
+  });
+}
+
+function countSeqPairs(a){
+  let c=0;
+  for(let i=0;i<a.length-1;i++) if(a[i+1]-a[i]===1) c++;
+  return c;
+}
+
+/* =========================
+   メイン
+========================= */
 function calc(){
- const l6=read("l6",6,43);
- const m=read("mini",5,31);
- if(!l6||!m){alert("入力不足");return;}
- const h=parseHistory();
+  const l6=read("l6",6,43);
+  const m=read("mini",5,31);
+  if(!l6||!m){ alert("入力不足（ロト6=6個 / ミニロト=5個、重複なし）"); return; }
 
- const p6=buildPool(l6,43,7,h);
- const pm=buildPool(m,31,6,h);
+  const h=parseHistory();
 
- buildHeatmap(h,43,p6.pool);
+  // ★ここが修正の本丸：一致は必ず1個だけの母集団
+  const p6=buildPoolStrict(l6,43,7,h);
+  const pm=buildPoolStrict(m,31,6,h);
 
- document.getElementById("pool6").textContent=p6.pool.join(" ");
- document.getElementById("meta6").textContent="固定："+p6.pull;
- document.getElementById("poolM").textContent=pm.pool.join(" ");
- document.getElementById("metaM").textContent="固定："+pm.pull;
+  // ヒートマップ（ロト6基準で表示）
+  buildHeatmap(h,43,p6.pool);
 
- render("out6",comb(p6.pool,6),l6,h);
- render("outM",comb(pm.pool,5),m,h);
+  document.getElementById("pool6").textContent=p6.pool.map(x=>String(x).padStart(2,"0")).join(" ");
+  document.getElementById("meta6").textContent=`固定（引っ張り1）:${String(p6.pull).padStart(2,"0")} ／ 他の前回数字は除外（強制）`;
 
- judge();
+  document.getElementById("poolM").textContent=pm.pool.map(x=>String(x).padStart(2,"0")).join(" ");
+  document.getElementById("metaM").textContent=`固定（引っ張り1）:${String(pm.pull).padStart(2,"0")} ／ 他の前回数字は除外（強制）`;
+
+  renderTickets("out6", comb(p6.pool,6), l6, h, "l6", p6.pull);
+  renderTickets("outM", comb(pm.pool,5), m,  h, "mini", pm.pull);
+
+  judge();
 }
 
 function judge(){
- const a=document.querySelectorAll("#out6 .star3").length;
- const b=document.querySelectorAll("#outM .star3").length;
- const el=document.getElementById("battle");
- if(a>b) el.textContent="今日はロト6全力";
- else if(b>a) el.textContent="今日はミニロト厚め";
- else el.textContent="両方様子見";
+  const a=document.querySelectorAll("#out6 .star3").length;
+  const b=document.querySelectorAll("#outM .star3").length;
+  const el=document.getElementById("battle");
+
+  // 勝負日判定（強め）
+  if(a>=3 && a>b) el.textContent="今日はロト6全力（勝負日）";
+  else if(b>=3 && b>a) el.textContent="今日はミニロト厚め（勝負日）";
+  else if(a>b) el.textContent="今日はロト6寄せ";
+  else if(b>a) el.textContent="今日はミニロト寄せ";
+  else el.textContent="両方様子見";
 }
 
 function showStrong(){
- document.querySelectorAll(".ticket").forEach(t=>{
-  if(!t.querySelector(".star3")) t.style.display="none";
- });
+  document.querySelectorAll(".ticket").forEach(t=>{
+    if(!t.querySelector(".star3")) t.style.display="none";
+  });
+}
+function showAll(){
+  document.querySelectorAll(".ticket").forEach(t=>t.style.display="block");
 }
 </script>
 </body>
