@@ -23,15 +23,50 @@ h1{margin:4px 0;font-size:26px}
 .card{background:var(--card);border:1px solid var(--line);
 border-radius:18px;padding:14px;margin-bottom:14px}
 
+/* 既存（grid）は残しておいてOK：下の「横1列強制」で上書きする */
 .boxrow{display:grid;gap:8px}
 .boxrow.l6{grid-template-columns:repeat(6,1fr)}
 .boxrow.mini{grid-template-columns:repeat(5,1fr)}
-.nbox{height:48px;border-radius:12px;border:1px solid var(--line);
-background:#020617;color:var(--text);text-align:center;font-size:18px}
+
+.nbox{
+  height:48px;border-radius:12px;border:1px solid var(--line);
+  background:#020617;color:var(--text);
+  text-align:center;font-size:18px;font-weight:800;
+}
+
+/* ===== ここが“写真のコード”相当：横1列を強制（iPhoneでも折り返さない） ===== */
+.boxrow.l6,
+.boxrow.mini{
+  display:flex !important;
+  gap:8px !important;
+  flex-wrap:nowrap !important;
+  width:100% !important;
+}
+.boxrow.l6 .nbox,
+.boxrow.mini .nbox{
+  flex:1 1 0 !important;
+  min-width:0 !important;
+  width:100% !important;
+  height:52px !important;
+  font-size:18px !important;
+  padding:0 !important;
+}
+/* 画面が狭い時だけ、少しだけ小さくして1列に収める */
+@media (max-width: 420px){
+  .boxrow.l6,
+  .boxrow.mini{ gap:6px !important; }
+  .boxrow.l6 .nbox,
+  .boxrow.mini .nbox{
+    height:48px !important;
+    font-size:16px !important;
+  }
+}
 
 .btnrow{display:flex;gap:10px;margin-top:10px;flex-wrap:wrap}
-button{flex:1;min-width:140px;height:44px;border-radius:14px;border:1px solid var(--line);
-background:#020617;color:var(--text);font-weight:800}
+button{
+  flex:1;min-width:140px;height:44px;border-radius:14px;border:1px solid var(--line);
+  background:#020617;color:var(--text);font-weight:800
+}
 
 .pool{text-align:center;font-size:20px;font-weight:900;letter-spacing:1px}
 .meta{text-align:center;font-size:12px;color:var(--muted);margin-top:6px}
@@ -217,10 +252,8 @@ function buildHeatmap(history,max,selected){
 
 /* =========================
    精密引っ張り（前回から1個）
-   ※ここで「唯一の一致」を決める
 ========================= */
 function pickPullAdvanced(last,history){
-  // historyが無い場合でも安定して選ぶ
   const avg=last.reduce((a,b)=>a+b,0)/last.length;
   let best=last[0], bestScore=-1;
 
@@ -249,27 +282,22 @@ function pickPullAdvanced(last,history){
 }
 
 /* =========================
-   追加候補の選び方（前回以外から）
-   → 「前回数字が混ざる」事故を物理的に防ぐ
+   追加候補（前回以外から）
 ========================= */
 function pickCandidates(max,banSet,history,needCount){
-  // 1..max の候補をスコア付けして上位から取る
   const cand=[];
   for(let n=1;n<=max;n++){
     if(banSet.has(n)) continue;
     let s=0;
 
-    // GAP（出てないほど上げる）
     let g=0; for(let h of history){ if(h.includes(n)) break; g++; }
     s += Math.min(g, 6) * 1.2;
 
-    // 頻度（ほどほど優遇）
     let f=0; history.forEach(h=>{ if(h.includes(n)) f++; });
     if(f===0) s += 1.5;
     if(f===1) s += 1.0;
     if(f>=4) s -= 1.5;
 
-    // トレンド（↑微上げ／↓微下げ）
     const t=trendOf(n,history);
     if(t==="↑") s += 0.7;
     if(t==="↓") s -= 0.3;
@@ -281,17 +309,13 @@ function pickCandidates(max,banSet,history,needCount){
 }
 
 /* =========================
-   プール生成（重要）
-   ルール：
-   - 前回数字は「pull だけ」入れる
-   - 他の前回数字は「絶対に入れない」
+   プール生成（超重要）
+   - 前回数字は pull だけ入れる
+   - 他の前回数字は絶対に入れない
 ========================= */
 function buildPoolStrict(last,max,size,history){
   const pull = pickPullAdvanced(last,history);
-
-  // ban = 前回数字すべて（pull以外）＋ pull自身は重複防止で別管理
   const ban = new Set(last.filter(n=>n!==pull));
-  // ここが最強の保険：banに入ってる数字は母集団に入らない
 
   const pool=[pull];
   const need=size-1;
@@ -302,8 +326,6 @@ function buildPoolStrict(last,max,size,history){
   // 最終安全チェック：前回との一致は必ず1
   const ov = overlapCount(pool,last);
   if(ov!==1){
-    // もし何かがおかしくても事故らせない
-    // pull 以外に前回数字が混じってたら排除して埋め直す
     let cleaned = pool.filter(n => n===pull || !ban.has(n));
     cleaned = Array.from(new Set(cleaned));
     while(cleaned.length<size){
@@ -313,7 +335,6 @@ function buildPoolStrict(last,max,size,history){
     }
     return {pool:cleaned.sort((a,b)=>a-b), pull};
   }
-
   return {pool:pool.sort((a,b)=>a-b), pull};
 }
 
@@ -329,13 +350,8 @@ function comb(a,k){
 
 /* =========================
    スコア（厳しめ）
-   - 連番あり：加点
-   - 一致=1：加点（固定前提）
-   - GAP / トレンド：加点
 ========================= */
 function zoneCount(nums, type){
-  // ロト6: 1-15 / 16-31 / 32-43
-  // ミニロト: 1-10 / 11-20 / 21-31
   let s=0,m=0,l=0;
   nums.forEach(n=>{
     if(type==="l6"){
@@ -350,28 +366,23 @@ function zoneCount(nums, type){
 function scoreTicket(t,last,history,type){
   let s=0;
 
-  // 連番（必須だけど、強く評価）
   if(hasSeq(t)) s += 6;
 
-  // 一致（必ず1のはず）
   const ov = overlapCount(t,last);
   if(ov===1) s += 8;
-  else s -= 999; // 絶対に出さない保険
+  else s -= 999;
 
-  // GAP（各数字）
   t.forEach(n=>{
     let g=0; for(let h of history){ if(h.includes(n)) break; g++; }
     s += Math.min(g, 6) * 1.1;
   });
 
-  // トレンド（↑少し加点）
   t.forEach(n=>{
     const tr=trendOf(n,history);
     if(tr==="↑") s += 0.4;
     if(tr==="↓") s -= 0.1;
   });
 
-  // ゾーンの偏り（極端すぎは微減点）
   const z=zoneCount(t,type);
   const maxZ=Math.max(z.s,z.m,z.l);
   if(maxZ>=5) s -= 1.2;
@@ -379,7 +390,6 @@ function scoreTicket(t,last,history,type){
   return Math.round(s*10)/10;
 }
 
-// ★の閾値（厳しめ）
 function stars(sc){
   if(sc>=20.0) return 3;
   if(sc>=16.0) return 2;
@@ -390,37 +400,34 @@ function labelByStar(st){
   if(st===2) return {txt:"強気", cls:"warn"};
   return {txt:"堅い", cls:"bad"};
 }
+function countSeqPairs(a){
+  let c=0;
+  for(let i=0;i<a.length-1;i++) if(a[i+1]-a[i]===1) c++;
+  return c;
+}
 
 /* =========================
-   描画（重要：一致=1を強制）
+   描画（一致=1固定＋pull固定）
 ========================= */
 function renderTickets(rootId,list,last,history,type,pull){
   const root=document.getElementById(rootId);
   root.innerHTML="";
 
   const keep=[];
+  const others = last.filter(n=>n!==pull);
 
   list.forEach(t=>{
-    // ① 連番必須
-    if(!hasSeq(t)) return;
-
-    // ② pull を必ず含む（＝一致の中身を固定）
-    if(!t.includes(pull)) return;
-
-    // ③ 一致（前回との共通）は必ず1個だけ
+    if(!hasSeq(t)) return;           // 連番必須
+    if(!t.includes(pull)) return;    // pull必須（＝一致の中身を固定）
     const ov = overlapCount(t,last);
-    if(ov!==1) return;
-
-    // ④ pull以外の前回数字が混ざってないこと（念のため）
-    const others = last.filter(n=>n!==pull);
-    if(t.some(n=>others.includes(n))) return;
+    if(ov!==1) return;               // 一致は必ず1個
+    if(t.some(n=>others.includes(n))) return; // pull以外の前回数字混入禁止
 
     const sc = scoreTicket(t,last,history,type);
     const st = stars(sc);
-    keep.push({t,sc,st});
+    keep.push({t,sc,st,ov});
   });
 
-  // スコア高い順に並べる
   keep.sort((a,b)=>b.sc-a.sc);
 
   keep.forEach(o=>{
@@ -435,7 +442,7 @@ function renderTickets(rootId,list,last,history,type,pull){
       <div class="nums">${o.t.map(x=>String(x).padStart(2,"0")).join(" ")}</div>
       <div class="chips">
         <span class="chip ${lab.cls}">${lab.txt}</span>
-        <span class="chip">一致:1</span>
+        <span class="chip">一致:${o.ov}</span>
         <span class="chip">連番:${countSeqPairs(o.t)}</span>
         <span class="chip">小中大:${z.s}-${z.m}-${z.l}</span>
         <span class="chip">Score:${o.sc}</span>
@@ -443,12 +450,6 @@ function renderTickets(rootId,list,last,history,type,pull){
     `;
     root.appendChild(d);
   });
-}
-
-function countSeqPairs(a){
-  let c=0;
-  for(let i=0;i<a.length-1;i++) if(a[i+1]-a[i]===1) c++;
-  return c;
 }
 
 /* =========================
@@ -461,11 +462,9 @@ function calc(){
 
   const h=parseHistory();
 
-  // ★ここが修正の本丸：一致は必ず1個だけの母集団
   const p6=buildPoolStrict(l6,43,7,h);
   const pm=buildPoolStrict(m,31,6,h);
 
-  // ヒートマップ（ロト6基準で表示）
   buildHeatmap(h,43,p6.pool);
 
   document.getElementById("pool6").textContent=p6.pool.map(x=>String(x).padStart(2,"0")).join(" ");
@@ -485,7 +484,6 @@ function judge(){
   const b=document.querySelectorAll("#outM .star3").length;
   const el=document.getElementById("battle");
 
-  // 勝負日判定（強め）
   if(a>=3 && a>b) el.textContent="今日はロト6全力（勝負日）";
   else if(b>=3 && b>a) el.textContent="今日はミニロト厚め（勝負日）";
   else if(a>b) el.textContent="今日はロト6寄せ";
