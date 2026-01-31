@@ -1,8 +1,9 @@
 {
-  "name": "最強777",
+  "name": "最強777（勝負日モード）",
   "short_name": "最強777",
   "start_url": "./",
   "display": "standalone",
   "background_color": "#0b1220",
-  "theme_color": "#0b1220"
+  "theme_color": "#0b1220",
+  "icons": []
 }
