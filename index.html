@@ -2,105 +2,75 @@
 <html lang="ja">
 <head>
   <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover" />
   <title>最強777</title>
 
-  <!-- PWA -->
   <link rel="manifest" href="./manifest.json" />
   <meta name="theme-color" content="#0b1220" />
+  <link rel="apple-touch-icon" href="./icon-192.png" />
   <meta name="apple-mobile-web-app-capable" content="yes" />
   <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
 
   <style>
     :root{
-      --bg:#0b1220; --card:#121a2c; --line:rgba(34,48,79,.7);
-      --text:#e7eefc; --muted:#93a4c7;
-      --good:#22c55e; --warn:#f59e0b; --bad:#ef4444;
-      --btn:#203055;
+      --bg:#0b1220; --card:#101a2a; --card2:#0f172a; --line:rgba(255,255,255,.10);
+      --text:#e7eefc; --muted:#9aa7c0; --good:#22c55e; --warn:#f59e0b; --bad:#ef4444;
+      --btn:#152445; --btn2:#0f1b33; --shadow: 0 10px 30px rgba(0,0,0,.25); --radius:16px;
     }
     *{box-sizing:border-box}
-    body{
-      margin:0; color:var(--text);
-      font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,"Noto Sans JP",sans-serif;
-      background:linear-gradient(180deg,#0b1220 0%, #0a1020 55%, #070b14 100%);
-    }
-    header{padding:18px 16px 10px}
-    h1{margin:0 0 6px; font-size:20px; letter-spacing:.5px}
-    .sub{color:var(--muted); font-size:12px; line-height:1.35}
-    .wrap{padding:0 16px 18px; max-width:760px; margin:0 auto}
-    .card{
-      background:rgba(18,26,44,.92);
-      border:1px solid rgba(34,48,79,.9);
-      border-radius:16px;
-      box-shadow:0 10px 30px rgba(0,0,0,.25);
-      padding:14px; margin:10px 0;
-    }
-    .row{display:flex; gap:10px; flex-wrap:wrap}
-    .col{flex:1; min-width:240px}
-    label{display:block; font-size:12px; color:var(--muted); margin:8px 0 6px}
-    .hint{font-size:11px; color:var(--muted); margin-top:6px}
-    .sep{height:1px; background:var(--line); margin:12px 0}
-    .btnrow{display:flex; gap:10px; margin-top:10px}
-    button{
-      flex:1; padding:12px 12px; border-radius:14px;
-      border:1px solid rgba(34,48,79,.9);
-      background:linear-gradient(180deg, rgba(32,48,85,.9), rgba(20,32,60,.9));
-      color:var(--text); font-weight:700;
-    }
+    body{margin:0;background:linear-gradient(180deg,#070b14 0%,var(--bg) 60%,#070b14 100%);color:var(--text);
+      font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,"Hiragino Sans","Noto Sans JP",sans-serif;}
+    .wrap{max-width:860px;margin:0 auto;padding:18px 14px 22px}
+    header{padding:6px 4px 10px}
+    h1{margin:0 0 4px;font-size:22px;letter-spacing:.5px}
+    .sub{color:var(--muted);font-size:12.5px;line-height:1.35}
+    .card{background:rgba(16,26,42,.92);border:1px solid var(--line);border-radius:var(--radius);box-shadow:var(--shadow);
+      padding:14px;margin:12px 0;}
+    .row{display:flex;gap:10px;flex-wrap:wrap;align-items:flex-start}
+    .col{flex:1;min-width:260px}
+    .titleRow{display:flex;align-items:baseline;justify-content:space-between;gap:8px;margin-bottom:10px}
+    .sectionTitle{font-weight:700}
+    .noteSmall{color:var(--muted);font-size:12px}
+    .gridNums{display:grid;grid-template-columns:repeat(6,1fr);gap:8px}
+    .gridNums.mini{grid-template-columns:repeat(5,1fr)}
+    .numBox{width:100%;height:54px;border-radius:14px;border:1px solid rgba(255,255,255,.12);
+      background:rgba(15,23,42,.55);color:var(--text);font-size:20px;text-align:center;outline:none;-webkit-appearance:none;}
+    .numBox:focus{border-color:rgba(99,102,241,.65);box-shadow:0 0 0 3px rgba(99,102,241,.18);}
+    label{display:block;color:var(--muted);font-size:12px;margin:10px 2px 6px}
+    .hint{color:var(--muted);font-size:12px;margin:6px 2px 0;line-height:1.35}
+    .btnRow{display:flex;gap:10px;margin-top:12px}
+    button{flex:1;height:52px;border-radius:16px;border:1px solid rgba(255,255,255,.10);
+      background:linear-gradient(180deg,var(--btn) 0%,#0e1a33 100%);color:var(--text);
+      font-size:16px;font-weight:800;letter-spacing:.4px;}
+    button.secondary{background:linear-gradient(180deg,var(--btn2) 0%,#0b1429 100%);color:var(--muted);}
     button:active{transform:translateY(1px)}
-    .pillrow{display:flex; gap:10px; flex-wrap:wrap; margin-top:10px}
-    .pill{
-      display:flex; align-items:center; gap:10px;
-      padding:10px 12px; border-radius:999px;
-      background:rgba(15,23,42,.55);
-      border:1px solid rgba(34,48,79,.9);
-      color:var(--text); font-size:12px;
-    }
-    .dot{width:10px; height:10px; border-radius:50%}
-    .b-good{background:var(--good)}
-    .b-warn{background:var(--warn)}
-    .b-bad{background:var(--bad)}
-
-    /* 6個/5個の入力ボックス */
-    .grid{
-      display:grid;
-      grid-template-columns: repeat(6, 1fr);
-      gap:8px;
-    }
-    .grid.mini{grid-template-columns: repeat(5, 1fr)}
-    .n{
-      width:100%;
-      padding:12px 0;
-      text-align:center;
-      font-size:18px;
-      border-radius:12px;
-      border:1px solid rgba(34,48,79,.9);
-      background:rgba(15,23,42,.55);
-      color:var(--text);
-      outline:none;
-    }
-    .n::placeholder{color:rgba(147,164,199,.55)}
-    .n:focus{border-color:rgba(147,164,199,.8)}
-    .n.invalid{border-color:rgba(239,68,68,.9)}
-
-    .bigout{
-      font-size:18px;
-      padding:12px 12px;
-      border-radius:14px;
-      border:1px solid rgba(34,48,79,.9);
-      background:rgba(15,23,42,.55);
-      margin-top:8px;
-    }
+    .statusBar{display:flex;gap:10px;flex-wrap:wrap;margin-top:12px}
+    .chip{flex:1;min-width:210px;padding:10px 12px;border-radius:14px;border:1px solid rgba(255,255,255,.10);
+      background:rgba(15,26,48,.55);display:flex;align-items:center;justify-content:space-between;gap:8px;}
+    .dot{width:10px;height:10px;border-radius:999px;background:var(--warn);flex:0 0 auto}
+    .chip b{font-size:13.5px}
+    .chip span{color:var(--muted);font-size:12px}
+    .dot.good{background:var(--good)} .dot.bad{background:var(--bad)} .dot.warn{background:var(--warn)}
+    .outTitleRow{display:flex;align-items:baseline;justify-content:space-between;gap:10px;margin:2px 0 10px}
     .mono{font-variant-numeric:tabular-nums}
-    .small{font-size:11px; color:var(--muted)}
-    .list .item{
-      padding:10px 12px; border-radius:14px;
-      border:1px solid rgba(34,48,79,.9);
-      background:rgba(15,23,42,.55);
-      display:flex; justify-content:space-between; gap:12px;
-      margin-top:8px;
-    }
-    footer{padding:10px 16px 18px; color:var(--muted); font-size:11px}
+    .pill{display:inline-flex;align-items:center;gap:6px;padding:6px 10px;border-radius:999px;
+      border:1px solid rgba(255,255,255,.10);background:rgba(15,26,48,.55);color:var(--muted);font-size:12px;}
+    .bigBox{border-radius:16px;border:1px solid rgba(255,255,255,.10);background:rgba(15,23,42,.45);padding:12px;margin-top:8px;}
+    .bigNums{font-size:18px;font-weight:900;letter-spacing:.4px}
+    .miniLine{color:var(--muted);font-size:12px;margin-top:6px}
+    .list{margin-top:10px;border-top:1px solid rgba(255,255,255,.08);}
+    .item{display:flex;gap:10px;align-items:center;padding:10px 4px;border-bottom:1px solid rgba(255,255,255,.06);}
+    .rank{width:58px;text-align:center;font-weight:900;letter-spacing:.4px;padding:7px 8px;border-radius:14px;
+      background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.10);flex:0 0 auto;}
+    .badge{padding:6px 10px;border-radius:999px;font-size:12px;font-weight:900;border:1px solid rgba(255,255,255,.10);
+      background:rgba(15,26,48,.55);color:var(--muted);white-space:nowrap;}
+    .badge.strong{color:#c7f9d4;border-color:rgba(34,197,94,.35);background:rgba(34,197,94,.10)}
+    .badge.mid{color:#ffe7bf;border-color:rgba(245,158,11,.35);background:rgba(245,158,11,.10)}
+    .badge.weak{color:#ffc7c7;border-color:rgba(239,68,68,.35);background:rgba(239,68,68,.10)}
+    .combo{flex:1} .combo .nums{font-weight:900}
+    .combo .meta{color:var(--muted);font-size:12px;margin-top:2px;display:flex;gap:10px;flex-wrap:wrap}
+    footer{color:var(--muted);font-size:11px;padding:8px 2px 0}
+    .small2{font-size:11px;color:var(--muted)}
   </style>
 </head>
 
@@ -111,265 +81,514 @@
   </header>
 
   <main class="wrap">
-    <div class="card">
-      <div class="row" style="align-items:flex-start;">
+    <section class="card">
+      <div class="titleRow">
+        <div class="sectionTitle">入力</div>
+        <div class="noteSmall">※フィルター/スコアは常時ON（操作不要）</div>
+      </div>
+
+      <div class="row">
         <div class="col">
           <label>直近ロト6（必須 / 6個）</label>
-          <div class="grid" id="gridLoto6"></div>
-          <div class="hint">※ 1個ずつ入れるだけ（区切り不要）／1〜43／重複はエラー</div>
+          <div class="gridNums" id="gridL6"></div>
+          <div class="hint">1〜43。数字キーボードだけでOK（区切り不要）。入力したら自動で次のマスへ。</div>
         </div>
 
         <div class="col">
           <label>直近ミニロト（任意 / 5個）</label>
-          <div class="grid mini" id="gridMini"></div>
-          <div class="hint">※ 入れると「連動ボーナス」が乗る（未入力でもOK）</div>
+          <div class="gridNums mini" id="gridMini"></div>
+          <div class="hint">入れると連動が強くなる（未入力でもOK）</div>
         </div>
       </div>
 
-      <div class="btnrow">
+      <div class="btnRow">
         <button id="btnCalc">計算する</button>
-        <button id="btnReset">クリア</button>
+        <button class="secondary" id="btnClear">クリア</button>
       </div>
 
-      <div class="pillrow">
-        <div class="pill" id="statusPill"><span class="dot b-warn"></span><span id="statusText">準備OK → 入力して計算</span></div>
-        <div class="pill" id="judgePill"><span class="dot b-warn"></span><span id="judgeText">判定：未計算</span></div>
-      </div>
-
-      <div class="sep"></div>
-
-      <div class="row">
-        <div class="col">
-          <label>最強777（母集団7）</label>
-          <div class="bigout mono" id="coreOut">—</div>
-          <div class="small">（ここに7個が出る）</div>
+      <div class="statusBar">
+        <div class="chip">
+          <div style="display:flex;align-items:center;gap:10px">
+            <div class="dot warn" id="dotFlow"></div>
+            <div>
+              <b id="flowText">準備OK → 入力して計算</b>
+              <div class="small2">準備 / 処理中 / 完了</div>
+            </div>
+          </div>
+          <span id="flowRight">準備</span>
         </div>
-        <div class="col">
-          <label>7通り（7C6）</label>
-          <div class="list" id="combos"></div>
-          <div class="small">（条件に合うものだけ表示）</div>
+
+        <div class="chip">
+          <div style="display:flex;align-items:center;gap:10px">
+            <div class="dot warn" id="dotJudge"></div>
+            <div>
+              <b id="judgeText">未計算</b>
+              <div class="small2">未計算 / OK / 入力不足 / エラー</div>
+            </div>
+          </div>
+          <span id="judgeRight">—</span>
         </div>
       </div>
-    </div>
+    </section>
+
+    <section class="card">
+      <div class="outTitleRow">
+        <div class="sectionTitle">結果</div>
+        <div class="noteSmall">計算完了 → この7で勝負</div>
+      </div>
+
+      <div class="pill">最強777（母集団7）</div>
+      <div class="bigBox">
+        <div class="bigNums mono" id="pool7">—</div>
+        <div class="miniLine" id="autoNote">固定/削除は自動決定（入力不要）</div>
+      </div>
+
+      <div style="height:10px"></div>
+
+      <div class="pill">7通り（7C6）</div>
+      <div class="list" id="outList"></div>
+
+      <footer>
+        ランクは「スコア＋構造（偏り/一致/連番）」で自動評価。表示はスッキリのまま、内部で常時チェックしています。
+      </footer>
+    </section>
   </main>
 
-  <footer class="wrap">
-    ※ フィルター/スコアは常時ON（操作不要）／ 固定・削除は自動決定（入力不要）
-  </footer>
-
 <script>
+(() => {
   const $ = (id)=>document.getElementById(id);
 
-  // --- UI生成（6個/5個の小入力） ---
-  function makeBoxes(parentId, count, placeholderStart=1){
-    const root = $(parentId);
+  // ===== UI 生成 =====
+  function makeBoxes(containerId, count, prefix){
+    const root = $(containerId);
     root.innerHTML = "";
     for(let i=0;i<count;i++){
       const inp = document.createElement("input");
-      inp.className = "n mono";
-      inp.type = "tel";                 // 数字キーボード優先
+      inp.className = "numBox mono";
+      inp.type = "tel";
       inp.inputMode = "numeric";
-      inp.placeholder = String(placeholderStart+i);
+      inp.placeholder = "—";
+      inp.maxLength = 2;
+      inp.dataset.idx = String(i);
+      inp.dataset.prefix = prefix;
       inp.autocomplete = "off";
-      inp.maxLength = 2;                // 1〜43/31想定
-      inp.addEventListener("input", ()=>{
-        inp.classList.remove("invalid");
-        // 2桁入ったら次へ（体感かなりラク）
-        if(inp.value.length >= 2){
-          const next = root.querySelectorAll("input")[i+1];
+      inp.spellcheck = false;
+
+      inp.addEventListener("input", () => {
+        inp.value = inp.value.replace(/[^\d]/g,"").slice(0,2);
+        if(inp.value.length >= 1){
+          const next = root.querySelector(`input[data-prefix="${prefix}"][data-idx="${i+1}"]`);
           if(next) next.focus();
         }
+        updateReadyState();
       });
+
+      inp.addEventListener("keydown", (e)=>{
+        if(e.key === "Backspace" && inp.value === ""){
+          const prev = root.querySelector(`input[data-prefix="${prefix}"][data-idx="${i-1}"]`);
+          if(prev) prev.focus();
+        }
+      });
+
       root.appendChild(inp);
     }
   }
-  makeBoxes("gridLoto6", 6, 3);
-  makeBoxes("gridMini", 5, 1);
+  makeBoxes("gridL6", 6, "l6");
+  makeBoxes("gridMini", 5, "mn");
 
-  // --- 状態表示 ---
-  function setPill(pillId, textId, kind, text){
-    const pill = $(pillId);
-    const dot = pill.querySelector(".dot");
-    dot.className = "dot " + (kind==="good" ? "b-good" : kind==="bad" ? "b-bad" : "b-warn");
-    $(textId).textContent = text;
+  // ===== ステータス =====
+  function setFlow(state){
+    const dot = $("dotFlow");
+    const txt = $("flowText");
+    const right = $("flowRight");
+    dot.classList.remove("good","bad","warn");
+    if(state === "ready"){
+      dot.classList.add("warn"); txt.textContent = "準備OK → 入力して計算"; right.textContent = "準備";
+    }else if(state === "working"){
+      dot.classList.add("warn"); txt.textContent = "処理中…"; right.textContent = "処理中";
+    }else{
+      dot.classList.add("good"); txt.textContent = "計算完了 → この7で勝負"; right.textContent = "完了";
+    }
   }
-  function setStatus(t){ setPill("statusPill","statusText","warn",t); }
-  function setJudge(kind, t){ setPill("judgePill","judgeText",kind,t); }
+  function setJudge(kind, rightText="—"){
+    const dot = $("dotJudge");
+    const txt = $("judgeText");
+    const right = $("judgeRight");
+    dot.classList.remove("good","bad","warn");
+    if(kind === "uncalc"){ dot.classList.add("warn"); txt.textContent = "未計算"; }
+    else if(kind === "ok"){ dot.classList.add("good"); txt.textContent = "OK"; }
+    else if(kind === "lack"){ dot.classList.add("warn"); txt.textContent = "入力不足"; }
+    else { dot.classList.add("bad"); txt.textContent = "エラー"; }
+    right.textContent = rightText;
+  }
 
-  // --- 入力取得 & バリデーション ---
-  function readNumsFromBoxes(parentId, min, max, requiredCount){
-    const inputs = $(parentId).querySelectorAll("input");
+  function getVals(prefix, count){
+    const arr = [];
+    for(let i=0;i<count;i++){
+      const inp = document.querySelector(`input[data-prefix="${prefix}"][data-idx="${i}"]`);
+      arr.push(inp ? inp.value.trim() : "");
+    }
+    return arr;
+  }
+  function parseNums(vals, min, max){
     const nums = [];
-    let ok = true;
-
-    inputs.forEach(inp=>{
-      const v = inp.value.trim();
-      if(v==="") return;
-      const n = Number(v);
-      if(!Number.isInteger(n) || n<min || n>max){
-        inp.classList.add("invalid"); ok=false; return;
-      }
+    for(const s of vals){
+      if(!s) continue;
+      const n = Number(s);
+      if(!Number.isInteger(n) || n<min || n>max) return {ok:false, nums:[], err:`範囲外:${s}`};
       nums.push(n);
-    });
-
-    // 必須数チェック（空もある場合にエラー）
-    if(requiredCount != null){
-      // 全部埋めて欲しい：空があるならエラー
-      let filled = 0;
-      inputs.forEach(inp=>{ if(inp.value.trim()!=="") filled++; });
-      if(filled !== requiredCount){
-        inputs.forEach(inp=>{ if(inp.value.trim()==="") inp.classList.add("invalid"); });
-        ok=false;
-      }
     }
-
-    // 重複チェック
+    return {ok:true, nums, err:""};
+  }
+  function hasDup(nums){
     const set = new Set(nums);
-    if(set.size !== nums.length){
-      // 重複っぽい入力を赤く
-      const seen = new Set();
-      inputs.forEach(inp=>{
-        const v = inp.value.trim();
-        if(v==="") return;
-        if(seen.has(v)) inp.classList.add("invalid");
-        seen.add(v);
-      });
-      ok=false;
-    }
-
-    return { ok, nums, inputs };
+    return set.size !== nums.length;
   }
 
-  // --- スコア（強め）: まずは “いま入ってる情報だけ” で動く版 ---
-  // ここは後で「直近20回/50回」データを入れると本気になる。
-  function scoreNumber(n, lastLoto6, lastMini){
+  function updateReadyState(){
+    const l6raw = getVals("l6",6);
+    const l6filled = l6raw.filter(x=>x!=="").length;
+    const l6 = parseNums(l6raw, 1, 43);
+
+    if(l6filled < 6){
+      setFlow("ready");
+      setJudge("lack", `${l6filled}/6`);
+      return;
+    }
+    if(!l6.ok){
+      setFlow("ready");
+      setJudge("error", l6.err);
+      return;
+    }
+    if(hasDup(l6.nums)){
+      setFlow("ready");
+      setJudge("error", "重複あり");
+      return;
+    }
+    setFlow("ready");
+    setJudge("uncalc", "準備OK");
+  }
+
+  // 初期
+  setFlow("ready");
+  setJudge("uncalc","—");
+  updateReadyState();
+
+  // ===== 強めスコアリング =====
+  function scoreAll(l6nums, miniNums){
+    const scores = new Map();
+    for(let n=1;n<=43;n++) scores.set(n, 0);
+
+    // 直近ロト6は強めに芯（ただし「一致過多」は後で削除で抑える）
+    for(const n of l6nums) scores.set(n, scores.get(n) + 3.6);
+
+    // ミニロト連動は強め
+    for(const n of miniNums) scores.set(n, scores.get(n) + 2.4);
+
+    // 中央寄り（18-27）を厚く
+    for(let n=18;n<=27;n++) scores.set(n, scores.get(n) + 1.2);
+
+    // 30台前半（30-33）も少し厚く
+    for(let n=30;n<=33;n++) scores.set(n, scores.get(n) + 0.8);
+
+    // 端（1-6, 38-43）は抑制強め
+    for(let n=1;n<=6;n++) scores.set(n, scores.get(n) - 0.8);
+    for(let n=38;n<=43;n++) scores.set(n, scores.get(n) - 0.8);
+
+    // 連番の温床になりやすい隣接は少し抑制
+    const hot = new Set([...l6nums, ...miniNums]);
+    for(const n of hot){
+      if(hot.has(n-1)) scores.set(n, scores.get(n) - 0.35);
+      if(hot.has(n+1)) scores.set(n, scores.get(n) - 0.35);
+    }
+    return scores;
+  }
+
+  // ===== 構造チェック（強め） =====
+  function structureScore(arr){
+    const a = [...arr].sort((x,y)=>x-y);
+    const low = a.filter(x=>x<=8).length;
+    const midCore = a.filter(x=>x>=18 && x<=27).length;
+    const high = a.filter(x=>x>=36).length;
+
+    let seq = 0;
+    for(let i=0;i<a.length-1;i++) if(a[i+1]-a[i]===1) seq++;
+
+    // スコア（高いほど良い）
+    // 罰則：端過多・中央過密・連番過多
     let s = 0;
-
-    // ① 直近ロト6に出た数字：引っ張り要素（強め）
-    if(lastLoto6.includes(n)) s += 6;
-
-    // ② 直近ミニロトに出た数字：連動ボーナス（強め）
-    if(lastMini.includes(n)) s += 4;
-
-    // ③ 中央コア寄り（18〜27）を少し評価
-    if(n>=18 && n<=27) s += 2;
-
-    // ④ 端（1〜8 / 36〜43）を少し抑制（強め）
-    if(n<=8 || n>=36) s -= 1;
-
-    return s;
+    if(low >= 3) s -= 2.0;
+    if(high >= 3) s -= 2.0;
+    if(midCore >= 5) s -= 2.0;
+    if(seq >= 3) s -= 1.5;
+    if(seq === 2) s -= 0.6;
+    return {s, low, midCore, high, seq};
   }
 
-  // --- 母集団7の作り方（入力最小版） ---
-  // ルール：候補プール =（直近ロト6）＋（直近ミニロト）を合体→スコア順
-  // 固定(最大2) = 上位から自動
-  // 母集団7 = 固定を含めつつ上位を埋める（不足分は周辺±1で補完）
-  function buildCore7(lastLoto6, lastMini){
-    const pool = Array.from(new Set([...lastLoto6, ...lastMini]));
-    // スコア付け
-    const ranked = pool
-      .map(n=>({n, s: scoreNumber(n, lastLoto6, lastMini)}))
-      .sort((a,b)=> b.s - a.s || a.n - b.n);
+  // ===== 自動固定 + 自動削除（強め） =====
+  function pickPool7(l6nums, miniNums){
+    const scores = scoreAll(l6nums, miniNums);
 
-    // 固定（自動）：上位から最大2（同点なら小さい方）
-    const fixed = ranked.slice(0,2).map(x=>x.n);
+    // 全候補ランキング
+    const ranked = [];
+    for(let n=1;n<=43;n++) ranked.push({n, s:scores.get(n)});
+    ranked.sort((a,b)=> b.s - a.s || a.n - b.n);
 
-    // 母集団7を作る
-    const core = [];
-    fixed.forEach(n=>core.push(n));
+    const l6set = new Set(l6nums);
 
-    for(const x of ranked){
-      if(core.length>=7) break;
-      if(!core.includes(x.n)) core.push(x.n);
+    // 固定（強制2個）
+    // A: ロト6から必ず1個（ロト6内でスコア上位）
+    const fixedFromL6 = [...ranked].filter(x=>l6set.has(x.n))[0]?.n ?? l6nums[0];
+    // B: ロト6以外から必ず1個（スコア上位）
+    const fixedOutL6 = [...ranked].filter(x=>!l6set.has(x.n))[0]?.n ?? ranked[0].n;
+
+    const fixed = Array.from(new Set([fixedFromL6, fixedOutL6])).slice(0,2);
+
+    // 自動削除リスト（内部のみ・表示しない）
+    const banned = new Set();
+
+    // 直近ロト6が濃すぎると当たりづらいので、
+    // “母集団7にロト6が4個以上入る”状態を避けたい → l6候補の下位は積極的に弾く
+    const l6Ranked = ranked.filter(x=>l6set.has(x.n));
+    for(let i=3;i<l6Ranked.length;i++){ // 上位3は残す余地、以降は弾き寄り
+      banned.add(l6Ranked[i].n);
     }
 
-    // 足りなければ、固定の近傍±1を候補にして埋める（範囲内）
-    function addIfValid(v){
-      if(v<1 || v>43) return;
-      if(!core.includes(v)) core.push(v);
+    // スコアが極端に低いものは弾く（勝負寄り）
+    const minKeep = ranked[0].s - 3.8; // トップから離れすぎを除外
+    for(const r of ranked){
+      if(r.s < minKeep) banned.add(r.n);
     }
-    let k = 1;
-    while(core.length < 7){
-      for(const f of fixed.length?fixed:lastLoto6){
-        addIfValid(f-k);
-        if(core.length>=7) break;
-        addIfValid(f+k);
-        if(core.length>=7) break;
+
+    // 母集団7を作る：固定2は必ず入れる → 残り5を「強め構造チェック」しながら追加
+    const pool = [...fixed];
+
+    function canAdd(n){
+      if(pool.includes(n)) return false;
+      if(banned.has(n) && !fixed.includes(n)) return false;
+
+      const test = [...pool, n];
+      const st = structureScore(test);
+
+      // 強め：構造ペナルティが大きい組み合わせは拒否
+      if(st.s <= -2.0) return false;
+
+      // 端（<=8, >=36）が増えすぎそうなら拒否
+      const low = test.filter(x=>x<=8).length;
+      const high = test.filter(x=>x>=36).length;
+      if(low >= 3) return false;
+      if(high >= 3) return false;
+
+      // 中央（18-27）過密は拒否
+      const midCore = test.filter(x=>x>=18 && x<=27).length;
+      if(midCore >= 5) return false;
+
+      // 連番過多も拒否
+      const a = [...test].sort((x,y)=>x-y);
+      let seq = 0;
+      for(let i=0;i<a.length-1;i++) if(a[i+1]-a[i]===1) seq++;
+      if(seq >= 3) return false;
+
+      // ロト6一致が増えすぎるとき（母集団7で4以上）は拒否
+      const matchL6 = test.filter(x=>l6set.has(x)).length;
+      if(matchL6 >= 4) return false;
+
+      return true;
+    }
+
+    // まず“非ロト6”を優先して厚く（勝負感アップ）
+    for(const r of ranked){
+      if(pool.length === 7) break;
+      if(l6set.has(r.n)) continue;
+      if(canAdd(r.n)) pool.push(r.n);
+    }
+
+    // 次に“ロト6”から必要分（上位だけ）を補完
+    for(const r of ranked){
+      if(pool.length === 7) break;
+      if(!l6set.has(r.n)) continue;
+      if(canAdd(r.n)) pool.push(r.n);
+    }
+
+    // それでも埋まらなければ制約を少しだけ緩めて埋める（最終手段）
+    if(pool.length < 7){
+      for(const r of ranked){
+        if(pool.length === 7) break;
+        if(pool.includes(r.n)) continue;
+        // bannedでも、最後は入れる（ただし一致4は避けたい）
+        const test = [...pool, r.n];
+        const matchL6 = test.filter(x=>l6set.has(x)).length;
+        if(matchL6 >= 4) continue;
+        pool.push(r.n);
       }
-      k++;
-      if(k>10) break; // 安全弁
     }
 
-    core.sort((a,b)=>a-b);
-    return { core, fixed, ranked };
+    pool.sort((a,b)=>a-b);
+
+    // 参考として「内部削除候補」を返す（表示には使わない）
+    const bannedArr = [...banned].sort((a,b)=>a-b);
+    return {pool, fixed, scores, bannedArr};
   }
 
-  // --- 7C6生成 ---
-  function comb7c6(arr7){
-    const res = [];
-    for(let i=0;i<arr7.length;i++){
-      const combo = arr7.filter((_,idx)=>idx!==i);
-      res.push(combo);
+  function combos6of7(pool){
+    const out = [];
+    for(let i=0;i<pool.length;i++){
+      out.push(pool.filter((_,idx)=>idx!==i));
     }
-    return res;
+    return out;
   }
 
-  // --- 描画 ---
-  function render(core, combos){
-    $("coreOut").textContent = core.length ? core.join(" / ") : "—";
-    const out = $("combos");
-    out.innerHTML = "";
-    combos.forEach((c, idx)=>{
-      const div = document.createElement("div");
-      div.className = "item mono";
-      div.innerHTML = `<strong>候補${idx+1}</strong><span>${c.join(" ")}</span>`;
-      out.appendChild(div);
+  function comboScore(combo, scores, l6nums){
+    let s = 0;
+    for(const n of combo) s += (scores.get(n) ?? 0);
+
+    // 一致過多を強めに減点（勝負寄り）
+    const match = combo.filter(n=>l6nums.includes(n)).length;
+    if(match >= 3) s -= 4.2;
+    else if(match === 2) s -= 1.4;
+
+    // 小中大バランス
+    const low = combo.filter(x=>x<=15).length;
+    const mid = combo.filter(x=>x>=16 && x<=31).length;
+    const high = combo.filter(x=>x>=32).length;
+    if(low===0 || high===0) s -= 1.0;
+    if(Math.max(low,mid,high) >= 4) s -= 0.8;
+
+    // 連番
+    const a = [...combo].sort((x,y)=>x-y);
+    let seq = 0;
+    for(let i=0;i<a.length-1;i++) if(a[i+1]-a[i]===1) seq++;
+    if(seq >= 2) s -= 0.7;
+
+    return {s, match, low, mid, high, seq};
+  }
+
+  function rankLabel(idx){
+    if(idx === 0) return {rank:"★★★", tone:"strong", mood:"強い"};
+    if(idx === 1) return {rank:"★★", tone:"strong", mood:"強気"};
+    if(idx === 2) return {rank:"★", tone:"mid", mood:"堅い"};
+    if(idx === 3) return {rank:"A", tone:"mid", mood:"標準"};
+    if(idx === 4) return {rank:"B", tone:"mid", mood:"様子見"};
+    if(idx === 5) return {rank:"C", tone:"weak", mood:"弱気"};
+    return {rank:"D", tone:"weak", mood:"保険"};
+  }
+
+  function fmt(nums){
+    return nums.map(n=>String(n).padStart(2,"0")).join(" ");
+  }
+
+  function renderResults(pool, fixed, combosSorted){
+    $("pool7").textContent = fmt(pool);
+    $("autoNote").textContent =
+      `固定（自動・強め）: ${fixed.map(n=>String(n).padStart(2,"0")).join(" ")} ／ 削除は自動判定（入力不要）`;
+
+    const list = $("outList");
+    list.innerHTML = "";
+
+    combosSorted.forEach((x, idx) => {
+      const lab = rankLabel(idx);
+      const item = document.createElement("div");
+      item.className = "item";
+
+      const rank = document.createElement("div");
+      rank.className = "rank";
+      rank.textContent = lab.rank;
+
+      const combo = document.createElement("div");
+      combo.className = "combo";
+
+      const nums = document.createElement("div");
+      nums.className = "nums mono";
+      nums.textContent = fmt(x.combo);
+
+      const meta = document.createElement("div");
+      meta.className = "meta";
+
+      const b1 = document.createElement("span");
+      b1.className = `badge ${lab.tone}`;
+      b1.textContent = lab.mood;
+
+      const b2 = document.createElement("span");
+      b2.className = "badge";
+      b2.textContent = `一致:${x.match}  連番:${x.seq}`;
+
+      const b3 = document.createElement("span");
+      b3.className = "badge";
+      b3.textContent = `小中大:${x.low}-${x.mid}-${x.high}`;
+
+      const b4 = document.createElement("span");
+      b4.className = "badge";
+      b4.textContent = `Score:${x.s.toFixed(1)}`;
+
+      meta.appendChild(b1); meta.appendChild(b2); meta.appendChild(b3); meta.appendChild(b4);
+
+      combo.appendChild(nums);
+      combo.appendChild(meta);
+
+      item.appendChild(rank);
+      item.appendChild(combo);
+
+      list.appendChild(item);
     });
   }
 
-  // --- ボタン ---
-  $("btnCalc").addEventListener("click", ()=>{
-    setStatus("処理中…");
-    setJudge("warn","判定：処理中");
+  async function calc(){
+    const l6raw = getVals("l6",6);
+    const mnraw = getVals("mn",5);
 
-    const loto = readNumsFromBoxes("gridLoto6", 1, 43, 6);
-    if(!loto.ok){
-      setStatus("準備OK → 入力して計算");
-      setJudge("bad","判定：入力不足/エラー");
-      return;
+    const l6 = parseNums(l6raw, 1, 43);
+    const l6filled = l6raw.filter(x=>x!=="").length;
+
+    if(l6filled < 6){
+      setFlow("ready"); setJudge("lack", `${l6filled}/6`); return;
     }
-    const mini = readNumsFromBoxes("gridMini", 1, 31, null); // 任意
-    if(!mini.ok){
-      setStatus("準備OK → 入力して計算");
-      setJudge("bad","判定：エラー（ミニロト範囲/重複）");
-      return;
+    if(!l6.ok){ setFlow("ready"); setJudge("error", l6.err); return; }
+    if(hasDup(l6.nums)){ setFlow("ready"); setJudge("error", "ロト6が重複"); return; }
+
+    const mn = parseNums(mnraw, 1, 31);
+    if(!mn.ok){ setFlow("ready"); setJudge("error", "ミニロト範囲外"); return; }
+    if(hasDup(mn.nums)){ setFlow("ready"); setJudge("error", "ミニロトが重複"); return; }
+
+    setFlow("working"); setJudge("uncalc", "処理中");
+    await new Promise(r=>setTimeout(r, 160));
+
+    const {pool, fixed, scores} = pickPool7(l6.nums, mn.nums);
+    const combos = combos6of7(pool);
+
+    const scored = combos.map(c=>{
+      const cs = comboScore(c, scores, l6.nums);
+      return {combo:c, ...cs};
+    }).sort((a,b)=> b.s - a.s);
+
+    renderResults(pool, fixed, scored);
+
+    setFlow("done"); setJudge("ok", "完了");
+  }
+
+  function clearAll(){
+    for(let i=0;i<6;i++){
+      const inp = document.querySelector(`input[data-prefix="l6"][data-idx="${i}"]`);
+      inp.value = "";
     }
+    for(let i=0;i<5;i++){
+      const inp = document.querySelector(`input[data-prefix="mn"][data-idx="${i}"]`);
+      inp.value = "";
+    }
+    $("pool7").textContent = "—";
+    $("outList").innerHTML = "";
+    setFlow("ready"); setJudge("uncalc","—");
+    updateReadyState();
+    const first = document.querySelector(`input[data-prefix="l6"][data-idx="0"]`);
+    if(first) first.focus();
+  }
 
-    const lastLoto6 = loto.nums.slice().sort((a,b)=>a-b);
-    const lastMini  = mini.nums.slice().sort((a,b)=>a-b);
+  $("btnCalc").addEventListener("click", calc);
+  $("btnClear").addEventListener("click", clearAll);
 
-    const { core } = buildCore7(lastLoto6, lastMini);
-    const combos = comb7c6(core);
-
-    render(core, combos);
-
-    setStatus("計算完了 → この7で勝負");
-    setJudge("good","判定：OK");
-  });
-
-  $("btnReset").addEventListener("click", ()=>{
-    $("gridLoto6").querySelectorAll("input").forEach(i=>{ i.value=""; i.classList.remove("invalid"); });
-    $("gridMini").querySelectorAll("input").forEach(i=>{ i.value=""; i.classList.remove("invalid"); });
-    $("coreOut").textContent = "—";
-    $("combos").innerHTML = "";
-    setStatus("準備OK → 入力して計算");
-    setJudge("warn","判定：未計算");
-  });
-
-  // Service Worker
-  if("serviceWorker" in navigator){
+  if ("serviceWorker" in navigator) {
     navigator.serviceWorker.register("./sw.js").catch(()=>{});
   }
+})();
 </script>
 </body>
 </html>
