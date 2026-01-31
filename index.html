@@ -3,584 +3,753 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>最強777（勝負日モード）</title>
+  <title>最強777</title>
 
-  <!-- PWA（アイコン無しでも動く） -->
+  <!-- PWA（すでにあるならOK） -->
   <link rel="manifest" href="./manifest.json" />
   <meta name="theme-color" content="#0b1220" />
   <meta name="apple-mobile-web-app-capable" content="yes" />
   <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+  <link rel="apple-touch-icon" href="./icon-192.png" />
 
   <style>
     :root{
-      --bg:#0b1220; --card: rgba(18,26,44,.92); --line: rgba(34,48,79,.80);
-      --text:#e7eefc; --muted:#93a4c7;
-      --good:#22c55e; --warn:#f59e0b; --bad:#ef4444;
-      --chip: rgba(15,23,42,.55);
-      --shadow: 0 14px 40px rgba(0,0,0,.35);
-      --r:16px;
+      --bg:#0b1220;
+      --card:rgba(18,26,44,.92);
+      --line:rgba(34,48,79,.7);
+      --text:#e7eefc;
+      --muted:#93a4c7;
+      --good:#22c55e;
+      --warn:#f59e0b;
+      --bad:#ef4444;
+      --chip:rgba(15,23,42,.55);
+      --chip2:rgba(34,48,79,.45);
     }
-    *{box-sizing:border-box}
+    *{ box-sizing:border-box; }
     body{
       margin:0;
-      background: linear-gradient(180deg, #070b14, var(--bg));
+      background:linear-gradient(180deg,#071021, #0b1220 35%, #0b1220);
       color:var(--text);
-      font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,"Hiragino Sans","Noto Sans JP",sans-serif;
+      font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,"Hiragino Kaku Gothic ProN","Noto Sans JP","Yu Gothic",sans-serif;
     }
-    .wrap{max-width:860px;margin:0 auto;padding:14px 14px 26px}
-    header{padding:14px 12px 8px}
-    h1{margin:0 0 6px;font-size:20px;letter-spacing:.08em}
-    .sub{color:var(--muted);font-size:12px;line-height:1.35}
+    header{
+      padding:18px 16px 10px;
+      position:sticky; top:0;
+      backdrop-filter: blur(10px);
+      background:linear-gradient(180deg, rgba(7,16,33,.92), rgba(11,18,32,.65));
+      border-bottom:1px solid var(--line);
+      z-index:10;
+    }
+    h1{ margin:0 0 6px; font-size:18px; letter-spacing:.04em; }
+    .sub{ color:var(--muted); font-size:12px; line-height:1.35; }
+    .wrap{ padding:0 16px 18px; max-width:860px; margin:0 auto; }
     .card{
-      background:var(--card); border:1px solid var(--line); border-radius:var(--r);
-      box-shadow:var(--shadow); padding:14px; margin:12px 0;
+      background:var(--card);
+      border:1px solid rgba(34,48,79,.9);
+      border-radius:16px;
+      padding:14px;
+      margin:12px 0;
+      box-shadow:0 10px 30px rgba(0,0,0,.25);
     }
-    .card h2{margin:0 0 10px;font-size:16px;letter-spacing:.06em;display:flex;justify-content:space-between;align-items:center;gap:10px}
-    .note{color:var(--muted);font-size:12px}
-    .split{height:1px;background:rgba(34,48,79,.55);margin:12px 0}
-
-    .gridLabel{display:flex;justify-content:space-between;align-items:flex-end;gap:10px;flex-wrap:wrap}
-    .smalltag{color:var(--muted);font-size:12px}
-
-    .numgrid{display:grid;grid-template-columns: repeat(6, 1fr);gap:8px;margin-top:10px}
-    .numgrid.mini{grid-template-columns: repeat(5, 1fr);}
-    .box{
-      background:rgba(15,23,42,.35);
-      border:1px solid rgba(34,48,79,.8);
-      border-radius:14px;
-      padding:8px 6px;
-      box-shadow: inset 0 0 0 1px rgba(255,255,255,.03);
+    .card h2{ margin:0 0 10px; font-size:14px; color:#dbe6ff; letter-spacing:.03em; }
+    .grid{
+      display:grid;
+      gap:10px;
     }
-    .box input{
-      width:100%; background:transparent; border:none; outline:none;
-      color:var(--text); font-size:20px; font-weight:800; text-align:center;
-      padding:8px 0; font-variant-numeric: tabular-nums;
+    .row2{ grid-template-columns:1fr 1fr; }
+    @media (max-width:640px){ .row2{ grid-template-columns:1fr; } }
+    .label{
+      display:flex; justify-content:space-between; align-items:flex-end;
+      margin:6px 2px 6px;
+      color:var(--muted);
+      font-size:12px;
     }
-    .box input::placeholder{color:rgba(147,164,199,.35);font-weight:700}
-    .box .cap{margin-top:2px;text-align:center;color:rgba(147,164,199,.65);font-size:10px}
-
-    .btns{display:flex;gap:10px}
+    .hint{ color:var(--muted); font-size:12px; margin:6px 2px 0; line-height:1.35; }
+    .boxrow{ display:flex; gap:8px; flex-wrap:wrap; }
+    .nbox{
+      width:46px; height:46px;
+      border-radius:12px;
+      border:1px solid rgba(34,48,79,.9);
+      background:rgba(15,23,42,.55);
+      color:var(--text);
+      font-size:16px;
+      text-align:center;
+      outline:none;
+    }
+    .nbox:focus{ border-color:rgba(99,102,241,.9); box-shadow:0 0 0 3px rgba(99,102,241,.18); }
+    .btnrow{ display:flex; gap:10px; margin-top:10px; }
     button{
-      appearance:none;border:1px solid rgba(34,48,79,.9);
-      background:linear-gradient(180deg, rgba(59,92,190,.20), rgba(59,92,190,.08));
-      color:var(--text); padding:12px 14px; border-radius:14px; font-weight:800;
-      width:100%; box-shadow: 0 10px 26px rgba(0,0,0,.22); cursor:pointer;
+      flex:1;
+      border:1px solid rgba(34,48,79,.9);
+      background:linear-gradient(180deg, rgba(99,102,241,.26), rgba(34,48,79,.22));
+      color:var(--text);
+      padding:12px 14px;
+      border-radius:14px;
+      font-weight:700;
+      letter-spacing:.02em;
     }
     button.secondary{
-      background:linear-gradient(180deg, rgba(30,41,59,.25), rgba(30,41,59,.10));
+      background:linear-gradient(180deg, rgba(34,48,79,.25), rgba(15,23,42,.28));
+      color:var(--muted);
+      font-weight:600;
     }
-    button:active{transform:translateY(1px)}
-
-    .statusBar{display:flex;gap:10px;flex-wrap:wrap;margin-top:10px}
-    .pill{
-      display:flex;align-items:center;justify-content:space-between;
-      padding:10px 12px;border-radius:14px;background:rgba(15,23,42,.35);
-      border:1px solid rgba(34,48,79,.7);
-      min-width: 220px; flex:1;
-    }
-    .dot{width:10px;height:10px;border-radius:50%}
-    .dot.good{background:var(--good)}
-    .dot.warn{background:var(--warn)}
-    .dot.bad{background:var(--bad)}
-    .dot.idle{background:#64748b}
-    .pill .left{display:flex;align-items:flex-start;gap:10px}
-    .pill .t1{font-weight:800}
-    .pill .t2{color:var(--muted);font-size:12px;margin-top:2px}
-    .pill .right{color:var(--muted);font-size:12px}
-
-    .mono{font-variant-numeric: tabular-nums}
-
-    .outTop{
-      display:flex;flex-wrap:wrap;gap:10px;align-items:center;justify-content:space-between
-    }
-    .bigNum{
-      background:rgba(15,23,42,.30);
-      border:1px solid rgba(34,48,79,.65);
-      border-radius:14px;
-      padding:12px 12px;
-      font-size:22px;
-      font-weight:900;
-      letter-spacing:.08em;
-      box-shadow: inset 0 0 0 1px rgba(255,255,255,.03);
-      width:100%;
-    }
-    .bigMeta{color:var(--muted);font-size:12px;margin-top:6px}
-
-    .ticket{
-      display:flex;align-items:center;justify-content:space-between;gap:10px;
-      padding:10px 12px;border-radius:14px;background:rgba(15,23,42,.25);
-      border:1px solid rgba(34,48,79,.60);
+    .statusbar{
+      display:flex; gap:10px; flex-wrap:wrap;
       margin-top:10px;
     }
-    .stars{
-      min-width:68px;
-      display:flex;align-items:center;justify-content:center;
-      background:rgba(15,23,42,.35);
-      border:1px solid rgba(34,48,79,.65);
-      border-radius:12px;
-      padding:8px 10px;
-      font-weight:900;
-      letter-spacing:.08em;
-    }
-    .tMain{flex:1}
-    .tNums{font-weight:900;font-size:18px;letter-spacing:.10em}
-    .chips{display:flex;gap:6px;flex-wrap:wrap;margin-top:6px}
-    .chip{
-      background:var(--chip);
-      border:1px solid rgba(34,48,79,.65);
-      border-radius:999px;
-      padding:6px 10px;
-      font-size:12px;
+    .pill{
+      display:inline-flex; align-items:center; gap:8px;
+      padding:10px 12px;
+      border-radius:14px;
+      background:rgba(15,23,42,.52);
+      border:1px solid rgba(34,48,79,.7);
       color:var(--muted);
+      font-size:12px;
+      min-width:180px;
+    }
+    .dot{ width:10px; height:10px; border-radius:50%; background:var(--warn); }
+    .dot.good{ background:var(--good); }
+    .dot.bad{ background:var(--bad); }
+    .sep{ height:1px; background:var(--line); margin:12px 0; }
+    .mono{ font-variant-numeric:tabular-nums; font-feature-settings:"tnum"; }
+    .bigline{
+      font-size:22px;
+      letter-spacing:.08em;
+      text-align:center;
+      padding:14px 10px;
+      border-radius:16px;
+      background:rgba(7,16,33,.55);
+      border:1px solid rgba(34,48,79,.9);
+    }
+    .mini{
+      font-size:12px; color:var(--muted);
+      text-align:center; margin-top:6px;
+    }
+    .outlist{ display:flex; flex-direction:column; gap:10px; margin-top:10px; }
+    .ticket{
+      border-radius:18px;
+      padding:12px 12px;
+      border:1px solid rgba(34,48,79,.85);
+      background:rgba(7,16,33,.42);
+    }
+    .ticket .top{
+      display:flex; align-items:center; justify-content:space-between; gap:10px; flex-wrap:wrap;
+      margin-bottom:8px;
+    }
+    .stars{
+      display:flex; gap:4px; align-items:center;
+      min-width:74px;
+      justify-content:flex-start;
+    }
+    .star{
+      width:16px; height:16px; display:inline-block;
+      filter:drop-shadow(0 2px 6px rgba(0,0,0,.25));
+      opacity:.92;
+    }
+    .star svg{ width:16px; height:16px; }
+    .tags{ display:flex; gap:8px; flex-wrap:wrap; }
+    .chip{
+      padding:8px 10px;
+      border-radius:999px;
+      background:var(--chip);
+      border:1px solid rgba(34,48,79,.75);
+      color:var(--muted);
+      font-size:12px;
       white-space:nowrap;
     }
-    .chip.good{color:#b9f6c9;border-color:rgba(34,197,94,.35)}
-    .chip.warn{color:#ffd7a1;border-color:rgba(245,158,11,.35)}
-    .chip.bad{color:#ffb2b2;border-color:rgba(239,68,68,.35)}
-    footer{color:var(--muted);font-size:11px;padding:10px 14px 0}
+    .chip.good{ color:#b8ffd2; border-color:rgba(34,197,94,.35); background:rgba(34,197,94,.12); }
+    .chip.warn{ color:#ffe2ad; border-color:rgba(245,158,11,.35); background:rgba(245,158,11,.12); }
+    .chip.bad{ color:#ffb6b6; border-color:rgba(239,68,68,.35); background:rgba(239,68,68,.12); }
+    .chip.strong{ color:#c7ffdc; border-color:rgba(34,197,94,.45); background:rgba(34,197,94,.15); }
+    .chip.bold{ color:#dbe6ff; background:var(--chip2); }
+    .numline{
+      text-align:center;
+      font-size:20px;
+      letter-spacing:.10em;
+      font-weight:800;
+      padding:8px 0 4px;
+    }
+    details{ margin-top:8px; }
+    summary{ color:var(--muted); cursor:pointer; user-select:none; }
+    textarea{
+      width:100%;
+      min-height:92px;
+      border-radius:14px;
+      border:1px solid rgba(34,48,79,.9);
+      background:rgba(15,23,42,.52);
+      color:var(--text);
+      padding:10px 12px;
+      outline:none;
+      font-size:12px;
+      line-height:1.35;
+    }
+    footer{ padding:10px 16px 18px; color:var(--muted); font-size:11px; text-align:center; }
   </style>
 </head>
 
 <body>
-  <header class="wrap">
-    <h1>最強777</h1>
-    <div class="sub">入力最小 → 母集団を自動算出 → ロト6/ミニロトを同時に即出力（勝負日モード）</div>
+  <header>
+    <div class="wrap" style="padding:0 16px;">
+      <h1>最強777</h1>
+      <div class="sub">入力最小 → 引っ張り固定（一致は必ず1個） → 連番あり → ロト6(7C6)＆ミニロト(6C5)を即出力</div>
+    </div>
   </header>
 
   <main class="wrap">
-    <!-- 入力 -->
-    <section class="card">
-      <h2>入力 <span class="note">※フィルター/スコアは常時ON（操作不要）</span></h2>
+    <div class="card">
+      <h2>入力（マスで入れるだけ） <span class="sub" style="float:right;">※フィルター/スコアは常時ON（操作不要）</span></h2>
 
-      <div class="split"></div>
+      <div class="grid row2">
+        <div>
+          <div class="label"><span>ロト6（前回・本数字6個）</span><span class="mono">1〜43</span></div>
+          <div class="boxrow" id="loto6Boxes"></div>
+          <div class="hint">※引っ張り（前回一致）は「必ず1個だけ」自動固定（他の前回数字は排除）</div>
+        </div>
 
-      <div class="gridLabel">
-        <div><b>ロト6（必須 / 6個）</b></div>
-        <div class="smalltag">数字のみでOK（1マス1数字）</div>
+        <div>
+          <div class="label"><span>ミニロト（前回・本数字5個）</span><span class="mono">1〜31</span></div>
+          <div class="boxrow" id="miniBoxes"></div>
+          <div class="hint">※ミニも一致は必ず1個だけ自動固定（連番は入れる）</div>
+        </div>
       </div>
-      <div class="numgrid" id="gridL6"></div>
-      <div class="note" style="margin-top:8px">重複・範囲外はエラー（1〜43）</div>
 
-      <div class="split"></div>
+      <details>
+        <summary>（任意）過去履歴を貼ると「引っ張り選び」がさらに現実寄り</summary>
+        <div class="grid row2" style="margin-top:8px;">
+          <div>
+            <div class="label"><span>ロト6 過去（任意）</span><span class="mono">例：03 10 12 20 31 11</span></div>
+            <textarea id="histLoto6" placeholder="例）複数行で貼ってOK
+03 10 12 20 31 11
+01 05 12 24 31 21
+..."></textarea>
+          </div>
+          <div>
+            <div class="label"><span>ミニロト 過去（任意）</span><span class="mono">例：01 09 17 23 29</span></div>
+            <textarea id="histMini" placeholder="例）複数行で貼ってOK
+01 09 17 23 29
+02 05 16 18 31
+..."></textarea>
+          </div>
+        </div>
+      </details>
 
-      <div class="gridLabel">
-        <div><b>ミニロト（任意 / 5個）</b></div>
-        <div class="smalltag">入れると連動ボーナスが乗る</div>
-      </div>
-      <div class="numgrid mini" id="gridMini"></div>
-      <div class="note" style="margin-top:8px">重複・範囲外はエラー（1〜31）</div>
-
-      <div class="split"></div>
-
-      <div class="btns">
+      <div class="btnrow">
         <button id="btnCalc">計算する</button>
-        <button id="btnReset" class="secondary">クリア</button>
+        <button class="secondary" id="btnClear">クリア</button>
       </div>
 
-      <div class="statusBar">
-        <div class="pill" id="pillStep">
-          <div class="left">
-            <span class="dot idle" id="dotStep"></span>
-            <div>
-              <div class="t1" id="stepTitle">準備</div>
-              <div class="t2" id="stepSub">準備OK → 入力して計算</div>
-            </div>
-          </div>
-          <div class="right" id="stepRight">—</div>
-        </div>
-
-        <div class="pill" id="pillJudge">
-          <div class="left">
-            <span class="dot idle" id="dotJudge"></span>
-            <div>
-              <div class="t1" id="judgeTitle">未計算</div>
-              <div class="t2" id="judgeSub">未計算 / OK / 入力不足 / エラー</div>
-            </div>
-          </div>
-          <div class="right" id="judgeRight">—</div>
-        </div>
+      <div class="statusbar">
+        <div class="pill"><span class="dot" id="dotProc"></span><span id="stProc">準備OK → 入力して計算</span></div>
+        <div class="pill"><span class="dot" id="dotJudge"></span><span id="stJudge">判定：未計算</span></div>
       </div>
-    </section>
+    </div>
 
-    <!-- 結果：ロト6 -->
-    <section class="card">
-      <h2>結果（ロト6） <span class="note">計算完了 → この7で勝負</span></h2>
+    <div class="card">
+      <h2>結果（ロト6） <span class="sub" style="float:right;">計算完了 → この7で勝負</span></h2>
+      <div class="bigline mono" id="outLoto6Pool">—</div>
+      <div class="mini" id="outLoto6Meta">固定（自動・強め）：— ／ 削除は自動判定（入力不要）</div>
 
-      <div class="outTop">
-        <div class="bigNum mono" id="outL6Mother">—</div>
-        <div class="bigMeta" id="outL6Meta">固定（自動・強め）：—　／　削除は自動判定（入力不要）</div>
-      </div>
+      <div class="sep"></div>
 
-      <div class="split"></div>
+      <div class="label"><span>予想（7通り / 7C6）</span><span class="mono" id="outLoto6Count">—</span></div>
+      <div class="outlist" id="outLoto6List"></div>
+    </div>
 
-      <div class="note"><b>予想（固定1で現実寄り）</b>：<span id="outL6Count">—</span></div>
-      <div id="outL6Tickets"></div>
-    </section>
+    <div class="card">
+      <h2>結果（ミニロト） <span class="sub" style="float:right;">計算完了 → この6から勝負</span></h2>
+      <div class="bigline mono" id="outMiniPool">—</div>
+      <div class="mini" id="outMiniMeta">固定（自動・強め）：— ／ 削除は自動判定（入力不要）</div>
 
-    <!-- 結果：ミニロト -->
-    <section class="card">
-      <h2>結果（ミニロト） <span class="note">計算完了 → この母集団で勝負</span></h2>
+      <div class="sep"></div>
 
-      <div class="outTop">
-        <div class="bigNum mono" id="outMiniMother">—</div>
-        <div class="bigMeta" id="outMiniMeta">固定（自動）：—　／　削除は自動判定（入力不要）</div>
-      </div>
-
-      <div class="split"></div>
-
-      <div class="note"><b>予想（固定1）</b>：<span id="outMiniCount">—</span></div>
-      <div id="outMiniTickets"></div>
-    </section>
-
-    <footer>
-      ※このツールは「見やすさ＆勝負しやすさ」優先。チェック条件は裏で常時ON、結果はスッキリ表示。
-    </footer>
+      <div class="label"><span>予想（6通り / 6C5）</span><span class="mono" id="outMiniCount">—</span></div>
+      <div class="outlist" id="outMiniList"></div>
+    </div>
   </main>
 
-  <script>
-    // ========= Utils =========
-    const $ = (id)=>document.getElementById(id);
-    const pad2 = (n)=>String(n).padStart(2,"0");
-    const uniq = (arr)=>Array.from(new Set(arr));
-    const clamp = (n,a,b)=>Math.max(a,Math.min(b,n));
+  <footer>最強777 / 一致は必ず1個（引っ張り固定） / 連番は入れる</footer>
 
-    function setStep(state, rightText=""){
-      // state: idle / run / done
-      const map = {
-        idle:{dot:"idle", title:"準備", sub:"準備OK → 入力して計算", right:rightText||"—"},
-        run :{dot:"warn", title:"処理中", sub:"処理中…", right:rightText||"…"},
-        done:{dot:"good", title:"完了", sub:"計算完了 → この7で勝負", right:rightText||"完了"},
-      };
-      const s = map[state]||map.idle;
-      $("dotStep").className = "dot " + s.dot;
-      $("stepTitle").textContent = s.title;
-      $("stepSub").textContent = s.sub;
-      $("stepRight").textContent = s.right;
-    }
-    function setJudge(kind, rightText=""){
-      // kind: idle / ok / lack / err
-      const map = {
-        idle:{dot:"idle", title:"未計算", sub:"未計算 / OK / 入力不足 / エラー", right:rightText||"—"},
-        ok  :{dot:"good", title:"OK", sub:"未計算 / OK / 入力不足 / エラー", right:rightText||"OK"},
-        lack:{dot:"warn", title:"入力不足", sub:"未計算 / OK / 入力不足 / エラー", right:rightText||"不足"},
-        err :{dot:"bad", title:"エラー", sub:"未計算 / OK / 入力不足 / エラー", right:rightText||"NG"},
-      };
-      const s = map[kind]||map.idle;
-      $("dotJudge").className = "dot " + s.dot;
-      $("judgeTitle").textContent = s.title;
-      $("judgeSub").textContent = s.sub;
-      $("judgeRight").textContent = s.right;
-    }
+<script>
+/* ===== 小物 ===== */
+const $ = (id)=>document.getElementById(id);
+const pad2 = (n)=>String(n).padStart(2,"0");
 
-    function buildGrid(containerId, count, cap){
-      const root = $(containerId);
-      root.innerHTML = "";
-      for(let i=0;i<count;i++){
-        const div = document.createElement("div");
-        div.className = "box";
-        div.innerHTML = `
-          <input inputmode="numeric" pattern="[0-9]*" placeholder="--" data-idx="${i}">
-          <div class="cap">${cap}${i+1}</div>
-        `;
-        root.appendChild(div);
-      }
-      // 2桁に整形（入力しやすく）
-      root.querySelectorAll("input").forEach(inp=>{
-        inp.addEventListener("input", ()=>{
-          let v = inp.value.replace(/[^\d]/g,"");
-          if(v.length>2) v = v.slice(0,2);
-          inp.value = v;
-        });
-      });
-    }
-
-    function readGrid(containerId, min, max){
-      const inputs = Array.from($(containerId).querySelectorAll("input"));
-      const nums = inputs.map(i=>i.value.trim()).filter(Boolean).map(v=>parseInt(v,10));
-      // 未入力がある場合は null を混ぜない
-      if(nums.length !== inputs.filter(i=>i.value.trim()!=="").length) return {ok:false, err:"数字が不正です"};
-      // 必須は呼び出し側で確認
-      // 範囲/重複チェック
-      for(const n of nums){
-        if(!Number.isInteger(n)) return {ok:false, err:"数字が不正です"};
-        if(n<min || n>max) return {ok:false, err:`範囲外（${min}〜${max}）`};
-      }
-      if(uniq(nums).length !== nums.length) return {ok:false, err:"重複があります"};
-      return {ok:true, nums};
-    }
-
-    // ========= Scoring (軽量・スマート) =========
-    // データが少ない前提で「それっぽく強め」に寄せる
-    function scoreNumber(n, max, lastSet, crossSet){
-      const mid = (max+1)/2;
-      const distMid = Math.abs(n - mid);          // 中央寄りを少し優遇
-      const midScore = 2.2 - (distMid / mid) * 1.2; // だいたい 1.0〜2.2
-      const pullBonus = lastSet.has(n) ? 3.0 : 0; // “引っ張り”は大きく
-      const crossBonus = crossSet.has(n) ? 1.2 : 0; // 連動（ミニ↔ロト6）
-      // 鏡ペア（ロト6: 44-n / ミニ: 32-n）
-      const mirror = (max+1) - n;
-      const mirrorBonus = (lastSet.has(mirror) || crossSet.has(mirror)) ? 0.8 : 0;
-      // 偏り抑制の軽いノイズ（固定的）
-      const noise = ((n*73)%17) / 50; // 0〜0.32
-      return midScore + pullBonus + crossBonus + mirrorBonus + noise;
-    }
-
-    function pickMotherSet(max, wantCount, lastNums, crossNums){
-      const lastSet = new Set(lastNums);
-      const crossSet = new Set(crossNums);
-
-      const scored = [];
-      for(let n=1;n<=max;n++){
-        const sc = scoreNumber(n, max, lastSet, crossSet);
-        scored.push({n, sc});
-      }
-      scored.sort((a,b)=>b.sc - a.sc);
-
-      // 固定（引っ張り）候補：lastNumsの中で最もスコア高い1個
-      const pull = lastNums.length
-        ? [...lastNums].map(n=>({n, sc: scored.find(x=>x.n===n).sc})).sort((a,b)=>b.sc-a.sc)[0].n
-        : null;
-
-      // 母集団に pull を必ず入れて、残りを上位から埋める
-      const mother = [];
-      if(pull) mother.push(pull);
-
-      for(const x of scored){
-  if(mother.length>=wantCount) break;
-  if(mother.includes(x.n)) continue;
-
-  // ★重要：前回数字は「引っ張り1個」以外は入れない
-  if(lastSet.has(x.n) && x.n !== pull) continue;
-
-  mother.push(x.n);
+function setProc(text, type="warn"){
+  $("stProc").textContent = text;
+  $("dotProc").className = "dot" + (type==="good"?" good":type==="bad"?" bad":"");
+}
+function setJudge(text, type="warn"){
+  $("stJudge").textContent = text;
+  $("dotJudge").className = "dot" + (type==="good"?" good":type==="bad"?" bad":"");
 }
 
-      mother.sort((a,b)=>a-b);
-
-      return {mother, pull, scoredMap: new Map(scored.map(x=>[x.n,x.sc]))};
-    }
-
-    // ========= Ticket generation =========
-    // ロト6：母集団7 & pull固定 → 6通り（= pull以外の1個を順に落とす）
-    function genTicketsL6(mother7, pull){
-      const arr = mother7.slice().sort((a,b)=>a-b);
-      const others = arr.filter(n=>n!==pull);
-      // pullがなければ単純に7C6（7通り）だが今回は “引っ張り1固定” を優先
-      if(!pull){
-        // fallback: 7C6 = 7枚
-        const t = [];
-        for(let i=0;i<arr.length;i++){
-          const one = arr.filter((_,idx)=>idx!==i);
-          t.push(one);
-        }
-        return t;
+function makeBoxes(containerId, count){
+  const el = $(containerId);
+  el.innerHTML = "";
+  for(let i=0;i<count;i++){
+    const inp = document.createElement("input");
+    inp.className="nbox mono";
+    inp.inputMode="numeric";
+    inp.placeholder="--";
+    inp.maxLength=2;
+    inp.addEventListener("input", ()=>{
+      inp.value = inp.value.replace(/[^\d]/g,"").slice(0,2);
+      // 次へ自動移動
+      if(inp.value.length>=2){
+        const next = el.querySelectorAll("input")[i+1];
+        if(next) next.focus();
       }
-      // 6通り
-      const tickets = [];
-      for(let i=0;i<others.length;i++){
-        const drop = others[i];
-        const keep = arr.filter(n=>n!==drop);
-        // keepは6個
-        tickets.push(keep);
-      }
-      return tickets;
-    }
-
-    // ミニ：母集団6 & pull固定 → 5通り（pull以外の1個を落として5個）
-    function genTicketsMini(mother6, pull){
-      const arr = mother6.slice().sort((a,b)=>a-b);
-      const others = arr.filter(n=>n!==pull);
-      if(!pull){
-        // fallback: 6C5=6枚
-        const t = [];
-        for(let i=0;i<arr.length;i++){
-          const one = arr.filter((_,idx)=>idx!==i);
-          t.push(one);
-        }
-        return t;
-      }
-      const tickets = [];
-      for(let i=0;i<others.length;i++){
-        const drop = others[i];
-        const keep = arr.filter(n=>n!==drop); // 5個
-        tickets.push(keep);
-      }
-      return tickets;
-    }
-
-    function analyzeTicket(nums, max, lastSet, scoreMap){
-      const sorted = nums.slice().sort((a,b)=>a-b);
-      // 連番
-      let consec = 0;
-      for(let i=1;i<sorted.length;i++){
-        if(sorted[i] === sorted[i-1]+1) consec++;
-      }
-      // 一致（引っ張り数）
-      const hit = sorted.filter(n=>lastSet.has(n)).length;
-
-      // 小中大バランス（ざっくり）
-      const third = max/3;
-      const small = sorted.filter(n=>n<=third).length;
-      const mid   = sorted.filter(n=>n>third && n<=2*third).length;
-      const big   = sorted.filter(n=>n>2*third).length;
-
-      // スコア：各数字スコア合計＋軽い構造ボーナス
-      let sc = 0;
-      for(const n of sorted) sc += (scoreMap.get(n)||0);
-      // バランスが極端だと少し減点
-      const skew = Math.max(small,mid,big) - Math.min(small,mid,big);
-      sc -= skew*0.25;
-      // 連番が適度なら加点（0〜2くらい）
-      if(consec===1) sc += 0.4;
-      if(consec===2) sc += 0.6;
-      if(consec>=3) sc -= 0.3;
-
-      // ランク
-      let label = "標準";
-      let stars = 1;
-      if(sc >= 10.4){ label="強い"; stars=3; }
-      else if(sc >= 10.1){ label="強気"; stars=2; }
-      else if(sc >= 9.8){ label="堅い"; stars=1; }
-      else if(sc >= 9.4){ label="様子見"; stars=1; }
-      else { label="弱め"; stars=1; }
-
-      return {sorted, consec, hit, small, mid, big, sc: Math.round(sc*10)/10, label, stars};
-    }
-
-    function renderTickets(targetId, tickets, max, lastNums, scoreMap){
-      const lastSet = new Set(lastNums);
-      const analyzed = tickets.map(t=>analyzeTicket(t, max, lastSet, scoreMap));
-      // 高スコア順に並べる
-      analyzed.sort((a,b)=>b.sc - a.sc);
-
-      const root = $(targetId);
-      root.innerHTML = "";
-      for(const a of analyzed){
-        const div = document.createElement("div");
-        div.className = "ticket";
-        const starStr = "★".repeat(a.stars).padEnd(3,"☆");
-        const tagClass = a.label==="強い" ? "good" : (a.label==="弱め" ? "bad" : "warn");
-        div.innerHTML = `
-          <div class="stars">${starStr}</div>
-          <div class="tMain">
-            <div class="tNums mono">${a.sorted.map(pad2).join(" ")}</div>
-            <div class="chips">
-              <span class="chip ${tagClass}">${a.label}</span>
-              <span class="chip">一致:${a.hit}</span>
-              <span class="chip">連番:${a.consec}</span>
-              <span class="chip">小中大:${a.small}-${a.mid}-${a.big}</span>
-              <span class="chip">Score:${a.sc}</span>
-            </div>
-          </div>
-        `;
-        root.appendChild(div);
-      }
-      return analyzed;
-    }
-
-    // ========= UI init =========
-    buildGrid("gridL6", 6, "L");
-    buildGrid("gridMini", 5, "M");
-    setStep("idle");
-    setJudge("idle");
-
-    function resetAll(){
-      ["gridL6","gridMini"].forEach(id=>{
-        $(id).querySelectorAll("input").forEach(i=>i.value="");
-      });
-      setStep("idle");
-      setJudge("idle");
-      $("outL6Mother").textContent = "—";
-      $("outL6Meta").textContent = "固定（自動・強め）：—　／　削除は自動判定（入力不要）";
-      $("outL6Count").textContent = "—";
-      $("outL6Tickets").innerHTML = "";
-
-      $("outMiniMother").textContent = "—";
-      $("outMiniMeta").textContent = "固定（自動）：—　／　削除は自動判定（入力不要）";
-      $("outMiniCount").textContent = "—";
-      $("outMiniTickets").innerHTML = "";
-    }
-
-    $("btnReset").addEventListener("click", resetAll);
-
-    $("btnCalc").addEventListener("click", ()=>{
-      setStep("run");
-      setJudge("idle");
-
-      // ロト6必須
-      const l6 = readGrid("gridL6", 1, 43);
-      if(!l6.ok){
-        setStep("idle");
-        setJudge("err", l6.err);
-        return;
-      }
-      if(l6.nums.length !== 6){
-        setStep("idle");
-        setJudge("lack", "ロト6は6個必須");
-        return;
-      }
-
-      // ミニ任意（0 or 5）
-      const mi = readGrid("gridMini", 1, 31);
-      if(!mi.ok){
-        setStep("idle");
-        setJudge("err", mi.err);
-        return;
-      }
-      if(!(mi.nums.length === 0 || mi.nums.length === 5)){
-        setStep("idle");
-        setJudge("lack", "ミニは0か5個");
-        return;
-      }
-
-      setJudge("ok");
-
-      // 連動：互いの入力を cross として渡す
-      const l6Cross = mi.nums || [];
-      const miCross = l6.nums || [];
-
-      // ロト6：母集団7（引っ張り1固定）
-      const l6Pick = pickMotherSet(43, 7, l6.nums, l6Cross);
-      const l6Mother = l6Pick.mother;
-      const l6Pull = l6Pick.pull;
-
-      // ミニ：母集団6（引っ張り1固定）
-      const miPick = (mi.nums.length===5)
-        ? pickMotherSet(31, 6, mi.nums, miCross)
-        : {mother: [], pull: null, scoredMap: new Map()};
-
-      // 出力（ロト6）
-      $("outL6Mother").textContent = l6Mother.map(pad2).join(" ");
-      $("outL6Meta").textContent =
-        `固定（自動・強め）：${l6Pull ? pad2(l6Pull) : "—"}　／　削除は自動判定（入力不要）`;
-
-      const l6Tickets = genTicketsL6(l6Mother, l6Pull);
-      $("outL6Count").textContent = `${l6Tickets.length}通り（固定1）`;
-      renderTickets("outL6Tickets", l6Tickets, 43, l6.nums, l6Pick.scoredMap);
-
-      // 出力（ミニ）
-      if(mi.nums.length===5){
-        $("outMiniMother").textContent = miPick.mother.map(pad2).join(" ");
-        $("outMiniMeta").textContent =
-          `固定（自動）：${miPick.pull ? pad2(miPick.pull) : "—"}　／　削除は自動判定（入力不要）`;
-
-        const miTickets = genTicketsMini(miPick.mother, miPick.pull);
-        $("outMiniCount").textContent = `${miTickets.length}通り（固定1）`;
-        renderTickets("outMiniTickets", miTickets, 31, mi.nums, miPick.scoredMap);
-      }else{
-        $("outMiniMother").textContent = "—（ミニ未入力）";
-        $("outMiniMeta").textContent = "ミニは任意。入力すると連動ボーナス＆ミニ予想も出ます。";
-        $("outMiniCount").textContent = "—";
-        $("outMiniTickets").innerHTML = "";
-      }
-
-      setStep("done", "完了");
     });
+    el.appendChild(inp);
+  }
+}
 
-    // Service Worker
-    if("serviceWorker" in navigator){
-      navigator.serviceWorker.register("./sw.js").catch(()=>{});
+function readBoxes(containerId, count, min, max){
+  const arr = [...$(containerId).querySelectorAll("input")].slice(0,count).map(x=>x.value.trim()).filter(Boolean);
+  if(arr.length!==count) return {ok:false, reason:`${count}個すべて入力してね`};
+  const nums = arr.map(s=>Number(s));
+  if(nums.some(n=>!Number.isInteger(n) || n<min || n>max)) return {ok:false, reason:`範囲外（${min}〜${max}）がある`};
+  const set = new Set(nums);
+  if(set.size!==nums.length) return {ok:false, reason:`重複がある`};
+  nums.sort((a,b)=>a-b);
+  return {ok:true, nums};
+}
+
+function parseHistory(text, min, max, perLine){
+  const lines = (text||"").split(/\n/).map(l=>l.trim()).filter(Boolean);
+  const draws = [];
+  for(const line of lines){
+    const nums = line.split(/[^\d]+/).filter(Boolean).map(Number).filter(n=>n>=min && n<=max);
+    if(nums.length>=perLine){
+      const take = nums.slice(0,perLine);
+      const set = new Set(take);
+      if(set.size===perLine){
+        draws.push(take.sort((a,b)=>a-b));
+      }
     }
-  </script>
+  }
+  return draws;
+}
+
+/* ===== スコア ===== */
+function freqMap(draws){
+  const m = new Map();
+  for(const d of draws){
+    for(const n of d){
+      m.set(n,(m.get(n)||0)+1);
+    }
+  }
+  return m;
+}
+function gapMap(draws){
+  // 0行目が最新として、最後に出た行番号を gap とみなす
+  const lastSeen = new Map();
+  for(let i=0;i<draws.length;i++){
+    for(const n of draws[i]){
+      if(!lastSeen.has(n)) lastSeen.set(n,i);
+    }
+  }
+  return lastSeen; // iが小さいほど最近
+}
+function norm(v, vmin, vmax){
+  if(vmax===vmin) return 0;
+  return (v - vmin) / (vmax - vmin);
+}
+function hasConsecutive(nums){
+  for(let i=0;i<nums.length-1;i++){
+    if(nums[i+1]-nums[i]===1) return true;
+  }
+  return false;
+}
+
+/* ===== 引っ張り1個（自動選定） ===== */
+function pickPullNumber(lastNums, game, miniLastNums, histDraws){
+  // game: "loto6" or "mini"
+  const centerLow = (game==="loto6") ? 12 : 10;
+  const centerHigh= (game==="loto6") ? 31 : 22;
+
+  const draws = histDraws || [];
+  const fm = freqMap(draws);
+  const gm = gapMap(draws);
+
+  // freq/gap のレンジ
+  let fmin=Infinity,fmax=-Infinity,gmin=Infinity,gmax=-Infinity;
+  if(draws.length){
+    for(const n of lastNums){
+      const f = fm.get(n)||0;
+      const g = gm.has(n)? gm.get(n): draws.length; // 未出は最大
+      fmin=Math.min(fmin,f); fmax=Math.max(fmax,f);
+      gmin=Math.min(gmin,g); gmax=Math.max(gmax,g);
+    }
+  }
+
+  let best = null;
+  let bestScore = -1e9;
+
+  for(const n of lastNums){
+    let s = 0;
+
+    // 中央寄り（強め）
+    if(n>=centerLow && n<=centerHigh) s += 3;
+    else s += 1;
+
+    // ミニ連動（ロト6のとき）
+    if(game==="loto6" && Array.isArray(miniLastNums) && miniLastNums.length){
+      if(miniLastNums.includes(n)) s += 2.5; // 共通
+      // 近傍（±1）
+      if(miniLastNums.some(m=>Math.abs(m-n)===1)) s += 1.0;
+    }
+
+    // 履歴があれば：GAP（最近出てないほど加点）＋ 頻出すぎ軽減
+    if(draws.length){
+      const f = fm.get(n)||0;
+      const g = gm.has(n)? gm.get(n): draws.length;
+      // gapは「大きいほど」加点、freqは「多すぎ」を少し減点
+      s += 2.0 * norm(g, gmin, gmax);
+      s += 1.2 * (1 - norm(f, fmin, fmax)); // 多すぎを抑える
+    }
+
+    // 端っこは少し抑える（強め）
+    if(game==="loto6"){
+      if(n<=5 || n>=39) s -= 0.8;
+    }else{
+      if(n<=3 || n>=29) s -= 0.6;
+    }
+
+    if(s>bestScore){
+      bestScore=s;
+      best=n;
+    }
+  }
+  return best;
+}
+
+/* ===== 母集団（ロト6は7 / ミニは6） ===== */
+function buildPool(game, pullNumber, lastNums, miniLastNums, histDraws){
+  const min = (game==="loto6") ? 1 : 1;
+  const max = (game==="loto6") ? 43 : 31;
+  const targetSize = (game==="loto6") ? 7 : 6;
+
+  // 前回数字は「引っ張り以外」すべて排除（一致を1に固定するため）
+  const banned = new Set(lastNums.filter(n=>n!==pullNumber));
+
+  // 生成候補（最小入力＋賢く）
+  const cand = new Set();
+  cand.add(pullNumber);
+
+  // 中央アンカー
+  const anchors = (game==="loto6") ? [18,20,21,22,24,25,27,28,29,30] : [12,13,14,15,16,17,18,19,20,21];
+  for(const a of anchors) cand.add(a);
+
+  // pullの近傍（連番を作りやすく）
+  for(const d of [-2,-1,1,2]){
+    const x = pullNumber + d;
+    if(x>=min && x<=max) cand.add(x);
+  }
+
+  // ミニ連動（ロト6側）
+  if(game==="loto6" && Array.isArray(miniLastNums) && miniLastNums.length){
+    for(const m of miniLastNums){
+      cand.add(m);
+      if(m-1>=1) cand.add(m-1);
+      if(m+1<=43) cand.add(m+1);
+    }
+  }
+
+  // 履歴があるなら「GAPが大きい」数字も候補へ
+  const draws = histDraws || [];
+  if(draws.length){
+    const gm = gapMap(draws);
+    // 未出/久しぶり順に上位を拾う
+    const all = [];
+    for(let n=min;n<=max;n++){
+      if(banned.has(n)) continue;
+      const g = gm.has(n)? gm.get(n): draws.length;
+      all.push({n,g});
+    }
+    all.sort((a,b)=>b.g-a.g);
+    for(const x of all.slice(0, 10)) cand.add(x.n);
+  }
+
+  // スコア付けして上位を選ぶ
+  const scored = [];
+  for(const n of cand){
+    if(n<min || n>max) continue;
+    if(banned.has(n)) continue;
+    let s = 0;
+
+    // pullは最優先で残す
+    if(n===pullNumber) s += 10;
+
+    // 中央寄り加点
+    if(game==="loto6"){
+      if(n>=12 && n<=31) s+=3; else s+=1;
+    }else{
+      if(n>=10 && n<=22) s+=3; else s+=1;
+    }
+
+    // 連番を作りやすい（近傍が候補にある）加点
+    if(cand.has(n-1) || cand.has(n+1)) s+=1.2;
+
+    // ミニ連動（ロト6）
+    if(game==="loto6" && miniLastNums && miniLastNums.length){
+      if(miniLastNums.includes(n)) s+=2.0;
+      if(miniLastNums.some(m=>Math.abs(m-n)===1)) s+=0.8;
+    }
+
+    scored.push({n,s});
+  }
+  scored.sort((a,b)=>b.s-a.s);
+
+  const pool = [];
+  for(const it of scored){
+    if(pool.length>=targetSize) break;
+    if(!pool.includes(it.n)) pool.push(it.n);
+  }
+
+  // 最終保証：サイズ不足なら中央から埋める
+  let add = 1;
+  while(pool.length<targetSize && add<=max){
+    const n = (game==="loto6") ? (18+add) : (12+add);
+    if(n>=min && n<=max && !banned.has(n) && !pool.includes(n)) pool.push(n);
+    add++;
+  }
+
+  pool.sort((a,b)=>a-b);
+  return pool;
+}
+
+/* ===== 7C6 / 6C5 ===== */
+function combinations(arr, k){
+  const res = [];
+  const a = arr.slice();
+  function rec(start, comb){
+    if(comb.length===k){ res.push(comb.slice()); return; }
+    for(let i=start;i<a.length;i++){
+      comb.push(a[i]);
+      rec(i+1, comb);
+      comb.pop();
+    }
+  }
+  rec(0, []);
+  return res;
+}
+
+/* ===== 口の評価（ランク・★・Score） ===== */
+function evalTicket(nums, lastNums, pullNumber, game){
+  const sorted = nums.slice().sort((a,b)=>a-b);
+
+  // 絶対条件
+  const matchCount = sorted.filter(n=>lastNums.includes(n)).length;
+  const pullCount  = sorted.filter(n=>n===pullNumber).length;
+  const consecutive = hasConsecutive(sorted);
+
+  // Score
+  let score = 0;
+
+  // 一致は必ず1（引っ張りのみ）
+  if(pullCount===1 && matchCount===1) score += 10;
+  else score -= 999;
+
+  // 連番は入れる（最低1組）
+  if(consecutive) score += 6;
+  else score -= 999;
+
+  // 中央寄り（強め）
+  const centerLow = (game==="loto6") ? 12 : 10;
+  const centerHigh= (game==="loto6") ? 31 : 22;
+  const centerCnt = sorted.filter(n=>n>=centerLow && n<=centerHigh).length;
+  score += centerCnt * 1.1;
+
+  // 端っこ抑制
+  if(game==="loto6"){
+    const edge = sorted.filter(n=>n<=5 || n>=39).length;
+    score -= edge * 0.8;
+  }else{
+    const edge = sorted.filter(n<=3 || n>=29).length;
+    score -= edge * 0.6;
+  }
+
+  // 連番の“質”（2連が複数/3連など）
+  let streak2=0, streak3=0;
+  for(let i=0;i<sorted.length-1;i++){
+    if(sorted[i+1]-sorted[i]===1) streak2++;
+    if(i<sorted.length-2 && sorted[i+2]-sorted[i]===2 && sorted[i+1]-sorted[i]===1) streak3++;
+  }
+  score += streak2 * 0.7 + streak3 * 0.9;
+
+  // ランク
+  let label="標準", tag="warn", stars=2;
+  if(score>=18){ label="強い"; tag="strong"; stars=3; }
+  else if(score>=15){ label="強気"; tag="strong"; stars=2; }
+  else if(score>=13){ label="堅い"; tag="warn"; stars=1; }
+  else { label="様子見"; tag="bad"; stars=1; }
+
+  return {
+    ok: (pullCount===1 && matchCount===1 && consecutive),
+    sorted,
+    matchCount,
+    streak2,
+    score: Math.round(score*10)/10,
+    label, tag, stars
+  };
+}
+
+function starIcons(count){
+  const wrap = document.createElement("div");
+  wrap.className="stars";
+  for(let i=0;i<count;i++){
+    const s = document.createElement("span");
+    s.className="star";
+    s.innerHTML = `
+      <svg viewBox="0 0 24 24" fill="none">
+        <path d="M12 2.6l2.7 6.2 6.7.6-5 4.4 1.5 6.6-5.9-3.4-5.9 3.4 1.5-6.6-5-4.4 6.7-.6L12 2.6z"
+          fill="rgba(231,238,252,.92)" />
+      </svg>`;
+    wrap.appendChild(s);
+  }
+  return wrap;
+}
+
+function renderTickets(container, tickets, lastNums, pullNumber, game){
+  container.innerHTML="";
+  for(const t of tickets){
+    const e = evalTicket(t, lastNums, pullNumber, game);
+    if(!e.ok) continue;
+
+    const card = document.createElement("div");
+    card.className="ticket";
+
+    const top = document.createElement("div");
+    top.className="top";
+
+    const stars = starIcons(e.stars);
+    top.appendChild(stars);
+
+    const tags = document.createElement("div");
+    tags.className="tags";
+
+    const c1 = document.createElement("span");
+    c1.className="chip " + (e.tag==="strong"?"strong":e.tag==="warn"?"warn":"bad");
+    c1.textContent = e.label;
+    tags.appendChild(c1);
+
+    const c2 = document.createElement("span");
+    c2.className="chip bold mono";
+    c2.textContent = `一致:${e.matchCount}`;
+    tags.appendChild(c2);
+
+    const c3 = document.createElement("span");
+    c3.className="chip bold mono";
+    c3.textContent = `連番:${e.streak2}`;
+    tags.appendChild(c3);
+
+    const c4 = document.createElement("span");
+    c4.className="chip bold mono";
+    c4.textContent = `Score:${e.score}`;
+    tags.appendChild(c4);
+
+    top.appendChild(tags);
+    card.appendChild(top);
+
+    const num = document.createElement("div");
+    num.className="numline mono";
+    num.textContent = e.sorted.map(pad2).join(" ");
+    card.appendChild(num);
+
+    container.appendChild(card);
+  }
+}
+
+/* ===== メイン計算 ===== */
+function calc(){
+  setProc("処理中…", "warn");
+  setJudge("判定：処理中", "warn");
+
+  // 入力
+  const loto6 = readBoxes("loto6Boxes", 6, 1, 43);
+  const mini  = readBoxes("miniBoxes", 5, 1, 31);
+
+  if(!loto6.ok || !mini.ok){
+    setProc("準備OK → 入力して計算", "warn");
+    setJudge(`判定：入力不足（${!loto6.ok?loto6.reason:mini.reason}）`, "bad");
+    return;
+  }
+
+  // 履歴（任意）
+  const histL6 = parseHistory($("histLoto6").value, 1, 43, 6);
+  const histMi = parseHistory($("histMini").value, 1, 31, 5);
+
+  // 引っ張り（必ず1個だけ）
+  const pullL6 = pickPullNumber(loto6.nums, "loto6", mini.nums, histL6);
+  const pullMi = pickPullNumber(mini.nums, "mini", null, histMi);
+
+  // 母集団（ロト6:7 / ミニ:6）
+  const poolL6 = buildPool("loto6", pullL6, loto6.nums, mini.nums, histL6);
+  const poolMi = buildPool("mini",  pullMi,  mini.nums, null, histMi);
+
+  // 口生成
+  const ticketsL6 = combinations(poolL6, 6).map(x=>x.sort((a,b)=>a-b));
+  const ticketsMi = combinations(poolMi, 5).map(x=>x.sort((a,b)=>a-b));
+
+  // ルール適用＆評価で並べ替え（Score順）
+  const evaledL6 = ticketsL6
+    .map(t=>({t, e: evalTicket(t, loto6.nums, pullL6, "loto6")}))
+    .filter(x=>x.e.ok)
+    .sort((a,b)=>b.e.score-a.e.score)
+    .map(x=>x.t);
+
+  const evaledMi = ticketsMi
+    .map(t=>({t, e: evalTicket(t, mini.nums, pullMi, "mini")}))
+    .filter(x=>x.e.ok)
+    .sort((a,b)=>b.e.score-a.e.score)
+    .map(x=>x.t);
+
+  // 表示
+  $("outLoto6Pool").textContent = poolL6.map(pad2).join(" ");
+  $("outLoto6Meta").textContent = `固定（自動・強め）：${pad2(pullL6)} ／ 一致は必ず1個（他の前回数字は排除）`;
+  $("outLoto6Count").textContent = `表示: ${evaledL6.length} / 7`;
+
+  $("outMiniPool").textContent = poolMi.map(pad2).join(" ");
+  $("outMiniMeta").textContent = `固定（自動・強め）：${pad2(pullMi)} ／ 一致は必ず1個（他の前回数字は排除）`;
+  $("outMiniCount").textContent = `表示: ${evaledMi.length} / 6`;
+
+  renderTickets($("outLoto6List"), evaledL6, loto6.nums, pullL6, "loto6");
+  renderTickets($("outMiniList"), evaledMi, mini.nums, pullMi, "mini");
+
+  // もし全部落ちたら（母集団が偏りすぎ）→メッセージ
+  if(evaledL6.length===0 || evaledMi.length===0){
+    setProc("完了（ただし母集団が偏って条件を満たせない可能性）", "warn");
+    setJudge("判定：エラー（条件を満たす口が作れない）", "bad");
+  }else{
+    setProc("完了", "good");
+    setJudge("判定：OK", "good");
+  }
+}
+
+function clearAll(){
+  [...$("loto6Boxes").querySelectorAll("input"), ...$("miniBoxes").querySelectorAll("input")].forEach(i=>i.value="");
+  $("histLoto6").value="";
+  $("histMini").value="";
+  $("outLoto6Pool").textContent="—";
+  $("outMiniPool").textContent="—";
+  $("outLoto6Meta").textContent="固定（自動・強め）：— ／ 削除は自動判定（入力不要）";
+  $("outMiniMeta").textContent="固定（自動・強め）：— ／ 削除は自動判定（入力不要）";
+  $("outLoto6Count").textContent="—";
+  $("outMiniCount").textContent="—";
+  $("outLoto6List").innerHTML="";
+  $("outMiniList").innerHTML="";
+  setProc("準備OK → 入力して計算", "warn");
+  setJudge("判定：未計算", "warn");
+}
+
+/* ===== 起動 ===== */
+makeBoxes("loto6Boxes", 6);
+makeBoxes("miniBoxes", 5);
+
+$("btnCalc").addEventListener("click", calc);
+$("btnClear").addEventListener("click", clearAll);
+</script>
+
 </body>
 </html>
