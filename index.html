@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>最強777 v7.0</title>
+<title>最強777 v7.2</title>
 
 <style>
 :root{
@@ -78,6 +78,8 @@ button.danger{border-color:rgba(239,68,68,.35)}
 
 .ticket{border:1px solid var(--line);border-radius:14px;
 padding:10px;margin-top:10px}
+.ticket.isHidden{display:none}
+
 .stars{text-align:center;font-size:20px;font-weight:900;margin-bottom:4px}
 .star3{color:var(--star3)}
 .star2{color:var(--star2)}
@@ -157,7 +159,7 @@ summary::-webkit-details-marker{display:none}
 
 <h1>最強777</h1>
 <div class="sub">
-一致は必ず1個（引っ張り固定1）｜連番必須｜精密引っ張り｜ヒートマップ×トレンド｜履歴は内蔵＋端末保存（ロト6=200/ミニ=100）
+連続出現は次回から除外｜引っ張り固定（ロト6=1 / ミニ=1〜2）｜下一桁同一ペアは必ず1組だけ（0も2以上も禁止）｜連番必須｜履歴は内蔵＋端末保存（ロト6=200/ミニ=100）｜表示は上位3口（全表示も可能）
 </div>
 
 <div class="card">
@@ -262,14 +264,14 @@ summary::-webkit-details-marker{display:none}
 </div>
 
 <div class="card">
-  <h3>ロト6 予想</h3>
+  <h3>ロト6 予想（上位3口）</h3>
   <div class="pool" id="pool6">—</div>
   <div class="meta" id="meta6">—</div>
   <div id="out6"></div>
 </div>
 
 <div class="card">
-  <h3>ミニロト 予想</h3>
+  <h3>ミニロト 予想（上位3口）</h3>
   <div class="pool" id="poolM">—</div>
   <div class="meta" id="metaM">—</div>
   <div id="outM"></div>
@@ -281,311 +283,72 @@ summary::-webkit-details-marker{display:none}
 /* =========================================================
    ✅ 内蔵履歴（ロト6=200回 / ミニ=100回）
    - 最新が先頭（上）
+   ※ゆうちゃんが貼ってくれた範囲をそのまま入れてある（v7.0と同等）
 ========================================================= */
 const BUILTIN_L6 = [
-  [8,18,24,36,40,42],
-  [15,24,29,32,33,35],
-  [6,10,25,30,34,36],
-  [6,17,23,27,33,35],
-  [2,10,13,14,29,33],
-  [3,4,12,15,32,42],
-  [8,28,30,32,37,38],
-  [6,18,21,31,37,40],
-  [2,7,24,37,39,41],
-  [4,28,29,30,38,42],
-  [1,9,18,24,35,42],
-  [5,6,13,21,33,34],
-  [8,16,22,40,41,42],
-  [2,13,26,28,38,43],
-  [9,12,14,16,19,42],
-  [5,7,21,22,38,41],
-  [3,7,15,17,19,30],
-  [11,12,14,17,21,26],
-  [1,14,27,30,33,37],
-  [20,28,31,35,37,41],
-  [1,3,18,25,30,34],
-  [3,15,27,28,31,39],
-  [6,11,15,21,25,32],
-  [10,24,25,39,40,42],
-  [8,13,18,32,37,43],
-  [10,11,16,19,37,39],
-  [2,5,10,22,25,38],
-  [1,4,7,12,16,28],
-  [1,6,11,26,33,40],
-  [11,19,22,34,40,42],
-  [9,14,29,38,41,43],
-  [4,19,22,24,32,38],
-  [7,12,14,15,24,30],
-  [2,15,25,27,38,42],
-  [5,31,37,39,41,42],
-  [7,12,20,23,27,29],
-  [7,10,17,26,35,42],
-  [5,10,12,17,21,35],
-  [2,13,22,25,35,37],
-  [5,16,21,22,33,35],
-  [8,15,27,33,37,39],
-  [2,3,16,20,23,29],
-  [3,7,28,29,32,36],
-  [7,21,31,36,40,43],
-  [6,10,12,19,21,42],
-  [5,12,18,23,34,39],
-  [2,5,8,11,20,26],
-  [12,18,26,28,41,43],
-  [10,13,16,29,34,42],
-  [1,20,28,29,31,43],
-  [2,3,18,26,31,33],
-  [2,17,22,29,30,43],
-  [5,21,23,28,38,39],
-  [7,13,14,21,39,42],
-  [1,2,14,21,22,33],
-  [2,4,11,22,24,35],
-  [10,13,27,31,40,42],
-  [6,8,13,16,20,23],
-  [7,11,21,24,29,34],
-  [7,12,30,31,39,43],
-  [1,14,20,36,38,41],
-  [12,14,18,24,30,42],
-  [9,15,24,29,31,40],
-  [8,17,20,35,36,40],
-  [5,8,9,17,22,36],
-  [6,18,23,24,30,35],
-  [4,7,19,22,26,28],
-  [3,7,18,27,33,34],
-  [16,18,25,27,31,36],
-  [1,5,10,13,35,40],
-  [1,17,19,23,36,42],
-  [13,21,24,26,34,36],
-  [1,2,16,21,25,35],
-  [17,31,34,35,36,38],
-  [1,4,6,9,20,43],
-  [5,16,17,28,36,40],
-  [6,17,26,28,33,34],
-  [2,4,8,26,27,37],
-  [10,11,13,16,24,26],
-  [7,12,13,35,37,42],
-  [9,11,18,21,27,34],
-  [1,5,12,16,17,40],
-  [6,9,15,19,24,40],
-  [15,17,23,29,35,43],
-  [6,20,23,24,33,35],
-  [8,12,25,28,32,42],
-  [14,20,29,31,41,42],
-  [1,30,36,37,41,43],
-  [4,19,28,29,34,40],
-  [3,18,31,36,37,40],
-  [20,21,23,28,32,34],
-  [5,10,15,17,29,41],
-  [1,2,13,19,35,41],
-  [15,18,19,21,37,40],
-  [23,25,26,30,34,35],
-  [4,14,20,28,29,34],
-  [4,6,22,30,33,36],
-  [11,13,15,20,35,42],
-  [2,6,13,21,24,30],
-  [7,10,14,27,28,32],
-  [3,14,27,28,32,36],
-  [2,6,9,26,32,36],
-  [11,26,27,31,36,37],
-  [3,7,12,13,35,38],
-  [6,13,15,22,35,41],
-  [3,4,22,26,29,35],
-  [4,12,25,29,34,36],
-  [17,18,20,23,33,43],
-  [2,5,28,33,35,36],
-  [3,4,20,29,35,38],
-  [4,8,19,22,32,37],
-  [11,12,27,28,38,43],
-  [10,22,27,28,31,32],
-  [19,20,36,40,41,43],
-  [1,15,16,20,21,25],
-  [3,4,5,13,34,42],
-  [2,19,21,24,35,42],
-  [11,19,26,28,29,36],
-  [2,10,15,25,35,37],
-  [19,23,29,33,36,40],
-  [24,25,31,32,34,40],
-  [1,3,6,23,28,35],
-  [9,20,26,28,30,42],
-  [12,13,17,28,37,43],
-  [18,29,30,38,39,43],
-  [10,24,30,36,37,41],
-  [8,9,11,27,36,38],
-  [1,2,4,14,27,43],
-  [6,11,21,33,39,42],
-  [10,11,17,25,34,38],
-  [1,16,18,26,27,35],
-  [2,12,13,21,23,43],
-  [2,14,15,25,26,42],
-  [10,22,26,27,29,37],
-  [5,9,14,32,39,41],
-  [1,9,26,28,31,38],
-  [1,6,19,29,33,35],
-  [3,8,12,14,17,40],
-  [6,13,16,20,27,41],
-  [3,7,9,10,12,30],
-  [1,5,16,20,24,31],
-  [9,23,27,30,33,41],
-  [5,10,19,23,29,37],
-  [7,10,12,20,40,43],
-  [2,18,20,24,26,29],
-  [2,11,18,26,32,36],
-  [10,13,18,24,34,37],
-  [5,9,11,18,34,37],
-  [7,16,18,25,26,27],
-  [6,7,18,30,34,37],
-  [3,11,22,31,33,35],
-  [1,2,13,25,33,41],
-  [6,10,22,23,31,36],
-  [5,17,19,21,38,41],
-  [3,4,5,6,18,20],
-  [3,12,14,29,30,33],
-  [5,13,18,23,30,39],
-  [4,10,14,19,24,40],
-  [4,10,22,24,36,38],
-  [2,5,22,23,29,33],
-  [1,11,24,29,33,34],
-  [4,8,9,14,16,41],
-  [2,8,24,29,30,31],
-  [3,5,7,8,22,27],
-  [3,9,21,25,42,43],
-  [10,14,21,23,24,40],
-  [1,8,21,22,30,42],
-  [4,5,17,20,29,30],
-  [14,21,23,24,28,36],
-  [18,19,23,25,27,32],
-  [4,7,15,18,35,40],
-  [14,15,26,28,33,37],
-  [3,9,29,30,39,42],
-  [2,4,9,19,33,36],
-  [5,19,23,26,31,42],
-  [7,23,27,30,34,36],
-  [5,12,15,16,28,40],
-  [6,18,29,33,35,40],
-  [19,29,36,37,41,42],
-  [25,31,33,35,37,42],
-  [7,8,9,19,22,38],
-  [2,16,23,38,40,43],
-  [17,21,29,34,41,42],
-  [7,15,21,27,28,32],
-  [4,5,6,28,29,39],
-  [5,7,15,18,36,37],
-  [1,6,19,25,33,39],
-  [2,6,7,16,17,41],
-  [20,25,29,36,38,42],
-  [3,11,24,25,28,32],
-  [3,6,11,25,36,43],
-  [2,9,22,31,33,35],
-  [9,14,21,31,33,43],
-  [1,8,14,27,29,37],
-  [6,8,12,18,32,38],
-  [1,11,13,16,21,37],
-  [4,7,17,31,38,43],
-  [11,15,16,24,38,39],
-  [13,31,33,36,41,43],
-  [6,15,26,33,39,41]
+  [8,18,24,36,40,42],[15,24,29,32,33,35],[6,10,25,30,34,36],[6,17,23,27,33,35],[2,10,13,14,29,33],
+  [3,4,12,15,32,42],[8,28,30,32,37,38],[6,18,21,31,37,40],[2,7,24,37,39,41],[4,28,29,30,38,42],
+  [1,9,18,24,35,42],[5,6,13,21,33,34],[8,16,22,40,41,42],[2,13,26,28,38,43],[9,12,14,16,19,42],
+  [5,7,21,22,38,41],[3,7,15,17,19,30],[11,12,14,17,21,26],[1,14,27,30,33,37],[20,28,31,35,37,41],
+  [1,3,18,25,30,34],[3,15,27,28,31,39],[6,11,15,21,25,32],[10,24,25,39,40,42],[8,13,18,32,37,43],
+  [10,11,16,19,37,39],[2,5,10,22,25,38],[1,4,7,12,16,28],[1,6,11,26,33,40],[11,19,22,34,40,42],
+  [9,14,29,38,41,43],[4,19,22,24,32,38],[7,12,14,15,24,30],[2,15,25,27,38,42],[5,31,37,39,41,42],
+  [7,12,20,23,27,29],[7,10,17,26,35,42],[5,10,12,17,21,35],[2,13,22,25,35,37],[5,16,21,22,33,35],
+  [8,15,27,33,37,39],[2,3,16,20,23,29],[3,7,28,29,32,36],[7,21,31,36,40,43],[6,10,12,19,21,42],
+  [5,12,18,23,34,39],[2,5,8,11,20,26],[12,18,26,28,41,43],[10,13,16,29,34,42],[1,20,28,29,31,43],
+  [2,3,18,26,31,33],[2,17,22,29,30,43],[5,21,23,28,38,39],[7,13,14,21,39,42],[1,2,14,21,22,33],
+  [2,4,11,22,24,35],[10,13,27,31,40,42],[6,8,13,16,20,23],[7,11,21,24,29,34],[7,12,30,31,39,43],
+  [1,14,20,36,38,41],[12,14,18,24,30,42],[9,15,24,29,31,40],[8,17,20,35,36,40],[5,8,9,17,22,36],
+  [6,18,23,24,30,35],[4,7,19,22,26,28],[3,7,18,27,33,34],[16,18,25,27,31,36],[1,5,10,13,35,40],
+  [1,17,19,23,36,42],[13,21,24,26,34,36],[1,2,16,21,25,35],[17,31,34,35,36,38],[1,4,6,9,20,43],
+  [5,16,17,28,36,40],[6,17,26,28,33,34],[2,4,8,26,27,37],[10,11,13,16,24,26],[7,12,13,35,37,42],
+  [9,11,18,21,27,34],[1,5,12,16,17,40],[6,9,15,19,24,40],[15,17,23,29,35,43],[6,20,23,24,33,35],
+  [8,12,25,28,32,42],[14,20,29,31,41,42],[1,30,36,37,41,43],[4,19,28,29,34,40],[3,18,31,36,37,40],
+  [20,21,23,28,32,34],[5,10,15,17,29,41],[1,2,13,19,35,41],[15,18,19,21,37,40],[23,25,26,30,34,35],
+  [4,14,20,28,29,34],[4,6,22,30,33,36],[11,13,15,20,35,42],[2,6,13,21,24,30],[7,10,14,27,28,32],
+  [3,14,27,28,32,36],[2,6,9,26,32,36],[11,26,27,31,36,37],[3,7,12,13,35,38],[6,13,15,22,35,41],
+  [3,4,22,26,29,35],[4,12,25,29,34,36],[17,18,20,23,33,43],[2,5,28,33,35,36],[3,4,20,29,35,38],
+  [4,8,19,22,32,37],[11,12,27,28,38,43],[10,22,27,28,31,32],[19,20,36,40,41,43],[1,15,16,20,21,25],
+  [3,4,5,13,34,42],[2,19,21,24,35,42],[11,19,26,28,29,36],[2,10,15,25,35,37],[19,23,29,33,36,40],
+  [24,25,31,32,34,40],[1,3,6,23,28,35],[9,20,26,28,30,42],[12,13,17,28,37,43],[18,29,30,38,39,43],
+  [10,24,30,36,37,41],[8,9,11,27,36,38],[1,2,4,14,27,43],[6,11,21,33,39,42],[10,11,17,25,34,38],
+  [1,16,18,26,27,35],[2,12,13,21,23,43],[2,14,15,25,26,42],[10,22,26,27,29,37],[5,9,14,32,39,41],
+  [1,9,26,28,31,38],[1,6,19,29,33,35],[3,8,12,14,17,40],[6,13,16,20,27,41],[3,7,9,10,12,30],
+  [1,5,16,20,24,31],[9,23,27,30,33,41],[5,10,19,23,29,37],[7,10,12,20,40,43],[2,18,20,24,26,29],
+  [2,11,18,26,32,36],[10,13,18,24,34,37],[5,9,11,18,34,37],[7,16,18,25,26,27],[6,7,18,30,34,37],
+  [3,11,22,31,33,35],[1,2,13,25,33,41],[6,10,22,23,31,36],[5,17,19,21,38,41],[3,4,5,6,18,20],
+  [3,12,14,29,30,33],[5,13,18,23,30,39],[4,10,14,19,24,40],[4,10,22,24,36,38],[2,5,22,23,29,33],
+  [1,11,24,29,33,34],[4,8,9,14,16,41],[2,8,24,29,30,31],[3,5,7,8,22,27],[3,9,21,25,42,43],
+  [10,14,21,23,24,40],[1,8,21,22,30,42],[4,5,17,20,29,30],[14,21,23,24,28,36],[18,19,23,25,27,32],
+  [4,7,15,18,35,40],[14,15,26,28,33,37],[3,9,29,30,39,42],[2,4,9,19,33,36],[5,19,23,26,31,42],
+  [7,23,27,30,34,36],[5,12,15,16,28,40],[6,18,29,33,35,40],[19,29,36,37,41,42],[25,31,33,35,37,42],
+  [7,8,9,19,22,38],[2,16,23,38,40,43],[17,21,29,34,41,42],[7,15,21,27,28,32],[4,5,6,28,29,39],
+  [5,7,15,18,36,37],[1,6,19,25,33,39],[2,6,7,16,17,41],[20,25,29,36,38,42],[3,11,24,25,28,32],
+  [3,6,11,25,36,43],[2,9,22,31,33,35],[9,14,21,31,33,43],[1,8,14,27,29,37],[6,8,12,18,32,38],
+  [1,11,13,16,21,37],[4,7,17,31,38,43],[11,15,16,24,38,39],[13,31,33,36,41,43],[6,15,26,33,39,41]
 ];
 
 const BUILTIN_MINI = [
-  [3,10,12,20,31],
-  [1,5,12,24,31],
-  [1,2,3,5,11],
-  [7,8,20,25,26],
-  [17,21,27,28,29],
-  [3,19,20,21,28],
-  [3,10,20,25,27],
-  [1,3,10,27,31],
-  [6,12,16,19,31],
-  [6,12,13,17,26],
-  [20,25,26,27,30],
-  [4,18,20,24,29],
-  [1,3,15,16,20],
-  [1,6,22,27,29],
-  [7,9,21,25,28],
-  [6,7,20,22,24],
-  [3,6,10,23,27],
-  [11,13,15,16,26],
-  [6,11,13,14,18],
-  [5,8,10,11,29],
-  [4,9,10,19,29],
-  [2,3,11,22,28],
-  [2,3,15,28,29],
-  [4,16,20,26,28],
-  [4,16,18,27,31],
-  [5,16,20,23,30],
-  [3,11,14,30,31],
-  [2,5,21,24,28],
-  [4,13,22,29,30],
-  [1,9,13,19,23],
-  [5,12,16,24,28],
-  [8,19,22,24,27],
-  [6,14,21,23,31],
-  [13,18,21,28,31],
-  [3,11,17,20,22],
-  [3,20,21,24,25],
-  [12,17,18,22,31],
-  [3,8,21,27,29],
-  [7,11,18,25,26],
-  [12,16,17,20,25],
-  [9,11,13,27,28],
-  [1,13,24,25,31],
-  [5,6,8,21,30],
-  [1,12,15,27,31],
-  [4,9,26,27,29],
-  [4,9,15,19,26],
-  [10,15,22,23,25],
-  [5,6,14,20,27],
-  [4,9,18,24,25],
-  [5,16,18,22,28],
-  [1,5,6,24,25],
-  [2,3,7,25,28],
-  [4,6,16,26,29],
-  [5,7,15,24,29],
-  [7,22,26,30,31],
-  [4,7,10,11,17],
-  [6,15,22,29,30],
-  [18,20,21,23,30],
-  [2,5,9,22,31],
-  [10,12,13,21,31],
-  [3,11,27,28,31],
-  [6,12,18,20,27],
-  [1,8,12,14,29],
-  [3,6,17,22,25],
-  [5,9,18,24,30],
-  [2,7,13,24,31],
-  [4,6,10,21,23],
-  [1,11,16,22,28],
-  [3,14,19,25,31],
-  [6,8,15,21,29],
-  [2,10,12,20,24],
-  [5,7,18,26,30],
-  [1,6,14,22,27],
-  [4,9,11,19,28],
-  [3,5,16,24,31],
-  [2,8,17,21,25],
-  [7,12,15,23,29],
-  [6,10,18,20,31],
-  [1,4,14,22,30],
-  [3,9,16,24,27],
-  [5,11,18,25,28],
-  [2,6,12,21,31],
-  [1,7,14,20,29],
-  [4,8,18,22,25],
-  [3,10,15,24,30],
-  [5,9,16,21,27],
-  [2,11,14,23,31],
-  [6,8,19,25,29],
-  [1,4,12,20,28],
-  [3,7,16,22,31],
-  [5,10,18,24,27],
-  [2,6,15,21,29],
-  [1,9,14,23,30],
-  [4,8,19,25,31],
-  [3,7,12,20,28],
-  [5,10,16,22,29],
-  [2,6,18,24,31],
-  [1,9,14,21,27],
-  [4,8,15,23,30],
-  [3,7,16,20,28]
+  [3,10,12,20,31],[1,5,12,24,31],[1,2,3,5,11],[7,8,20,25,26],[17,21,27,28,29],
+  [3,19,20,21,28],[3,10,20,25,27],[1,3,10,27,31],[6,12,16,19,31],[6,12,13,17,26],
+  [20,25,26,27,30],[4,18,20,24,29],[1,3,15,16,20],[1,6,22,27,29],[7,9,21,25,28],
+  [6,7,20,22,24],[3,6,10,23,27],[11,13,15,16,26],[6,11,13,14,18],[5,8,10,11,29],
+  [4,9,10,19,29],[2,3,11,22,28],[2,3,15,28,29],[4,16,20,26,28],[4,16,18,27,31],
+  [5,16,20,23,30],[3,11,14,30,31],[2,5,21,24,28],[4,13,22,29,30],[1,9,13,19,23],
+  [5,12,16,24,28],[8,19,22,24,27],[6,14,21,23,31],[13,18,21,28,31],[3,11,17,20,22],
+  [3,20,21,24,25],[12,17,18,22,31],[3,8,21,27,29],[7,11,18,25,26],[12,16,17,20,25],
+  [9,11,13,27,28],[1,13,24,25,31],[5,6,8,21,30],[1,12,15,27,31],[4,9,26,27,29],
+  [4,9,15,19,26],[10,15,22,23,25],[5,6,14,20,27],[4,9,18,24,25],[5,16,18,22,28],
+  [1,5,6,24,25],[2,3,7,25,28],[4,6,16,26,29],[5,7,15,24,29],[7,22,26,30,31],
+  [4,7,10,11,17],[6,15,22,29,30],[18,20,21,23,30],[2,5,9,22,31],[10,12,13,21,31],
+  [3,11,27,28,31],[6,12,18,20,27],[1,8,12,14,29],[3,6,17,22,25],[5,9,18,24,30],
+  [2,7,13,24,31],[4,6,10,21,23],[1,11,16,22,28],[3,14,19,25,31],[6,8,15,21,29],
+  [2,10,12,20,24],[5,7,18,26,30],[1,6,14,22,27],[4,9,11,19,28],[3,5,16,24,31],
+  [2,8,17,21,25],[7,12,15,23,29],[6,10,18,20,31],[1,4,14,22,30],[3,9,16,24,27],
+  [5,11,18,25,28],[2,6,12,21,31],[1,7,14,20,29],[4,8,18,22,25],[3,10,15,24,30],
+  [5,9,16,21,27],[2,11,14,23,31],[6,8,19,25,29],[1,4,12,20,28],[3,7,16,22,31],
+  [5,10,18,24,27],[2,6,15,21,29],[1,9,14,23,30],[4,8,19,25,31],[3,7,12,20,28],
+  [5,10,16,22,29],[2,6,18,24,31],[1,9,14,21,27],[4,8,15,23,30],[3,7,16,20,28]
 ];
 
 /* =========================================================
@@ -654,7 +417,8 @@ let STATE = {
   heatMode: "l6",            // "l6" or "mini"
   lastInputs: { l6:null, mini:null },
   pools: { l6:null, mini:null },
-  histories: { l6:[], mini:[] }
+  histories: { l6:[], mini:[] },
+  renderLimit: 3
 };
 
 /* =========================================================
@@ -696,8 +460,7 @@ function getHistoryFor(game){
   if(pasted.length>0) return pasted;
 
   // 通常は保存履歴（内蔵＋追記）を使う
-  const saved = loadSaved(game);
-  return saved;
+  return loadSaved(game);
 }
 
 /* =========================================================
@@ -763,28 +526,75 @@ function refreshHeatmap(){
 }
 
 /* =========================================================
-   精密引っ張り（前回から1個）
+   ✅ 追加ルール：前回＋前々回の連続出現を検出（共通数字）
 ========================================================= */
-function pickPullAdvanced(last,history){
-  const avg=last.reduce((a,b)=>a+b,0)/last.length;
-  let best=last[0], bestScore=-1;
+function intersect(a,b){
+  const set=new Set(b);
+  return a.filter(x=>set.has(x));
+}
+function sameSet(a,b){
+  if(!a||!b||a.length!==b.length) return false;
+  for(let i=0;i<a.length;i++) if(a[i]!==b[i]) return false;
+  return true;
+}
+function findPrevDraw(latest, history){
+  // history は最新が先頭の想定だけど
+  // 「保存してない/貼り付け優先」などのブレもあるので、
+  // latest と一致しない最初の行を前々回として扱う
+  for(let i=0;i<history.length;i++){
+    const h = history[i];
+    if(!Array.isArray(h)) continue;
+    if(h.length!==latest.length) continue;
+    const sorted = h.slice().sort((a,b)=>a-b);
+    if(!sameSet(sorted, latest)) return sorted;
+  }
+  return null;
+}
+function getConsecutiveDupes(latest, history){
+  const prev = findPrevDraw(latest, history);
+  if(!prev) return [];
+  return intersect(latest, prev).sort((a,b)=>a-b);
+}
 
-  last.forEach(n=>{
+/* =========================================================
+   ✅ 下一桁同一ペア（必ず1組だけ・固定）
+   - “1組だけ”＝下一桁の重複グループがちょうど1つで、サイズは2
+========================================================= */
+function lastDigit(n){ return n%10; }
+function hasExactlyOneLastDigitPair(nums){
+  const map = new Map();
+  nums.forEach(n=>{
+    const d=lastDigit(n);
+    map.set(d, (map.get(d)||0)+1);
+  });
+  let pairGroups = 0;
+  for(const [d,c] of map.entries()){
+    if(c===2) pairGroups++;
+    else if(c>=3) return false; // 3つ以上同じ下一桁はNG（2組以上扱い/禁止）
+  }
+  return pairGroups===1;
+}
+
+/* =========================================================
+   精密引っ張り（候補集合から選ぶ）
+========================================================= */
+function pickPullFromCandidates(cands,history){
+  if(cands.length===0) return null;
+  const avg=cands.reduce((a,b)=>a+b,0)/cands.length;
+  let best=cands[0], bestScore=-1;
+
+  cands.forEach(n=>{
     let s=0;
 
-    // 平均への近さ（中央寄り）
     s += 6 - Math.min(Math.abs(n-avg), 6);
 
-    // GAP（直近出てないほど↑）
     let g=0; for(let h of history){ if(h.includes(n)) break; g++; }
     s += Math.min(g, 6);
 
-    // 出現頻度（少なすぎは上げる／多すぎは下げる）
     let f=0; history.forEach(h=>{ if(h.includes(n)) f++; });
     if(f<=1) s += 3;
     if(f>=4) s -= 2;
 
-    // ゾーン補正（ロト6は 10-30 を少し厚め）
     if(n>=10 && n<=30) s += 1;
 
     if(s>bestScore){ bestScore=s; best=n; }
@@ -794,61 +604,183 @@ function pickPullAdvanced(last,history){
 }
 
 /* =========================================================
-   追加候補（前回以外から）
+   追加候補（スコア用）
 ========================================================= */
-function pickCandidates(max,banSet,history,needCount){
+function trendOfLocal(n,history){
+  return trendOf(n,history);
+}
+function scoreCandidate(n,history){
+  let s=0;
+  let g=0; for(let h of history){ if(h.includes(n)) break; g++; }
+  s += Math.min(g, 6) * 1.2;
+
+  let f=0; history.forEach(h=>{ if(h.includes(n)) f++; });
+  if(f===0) s += 1.5;
+  if(f===1) s += 1.0;
+  if(f>=4) s -= 1.5;
+
+  const t=trendOfLocal(n,history);
+  if(t==="↑") s += 0.7;
+  if(t==="↓") s -= 0.3;
+
+  return s;
+}
+
+/* =========================================================
+   ✅ プール生成（連続除外 + pull固定 + 下一桁同一ペアを“1組だけ”作る）
+   - ルール上、チケットは「pullは必ず入れる」
+   - ロト6：pull=1個
+   - ミニ：pull=1〜2個
+========================================================= */
+function pickBestPairDigit(max, banSet, history, forbiddenDigits){
+  let best = null; // {digit, a, b, score}
+  for(let d=0; d<=9; d++){
+    if(forbiddenDigits.has(d)) continue;
+
+    const nums=[];
+    for(let n=1;n<=max;n++){
+      if(banSet.has(n)) continue;
+      if(lastDigit(n)!==d) continue;
+      nums.push(n);
+    }
+    if(nums.length<2) continue;
+
+    nums.sort((x,y)=>scoreCandidate(y,history)-scoreCandidate(x,history));
+    const a=nums[0], b=nums[1];
+    const sc = scoreCandidate(a,history)+scoreCandidate(b,history);
+
+    if(!best || sc>best.score){
+      best={digit:d,a,b,score:sc};
+    }
+  }
+  return best;
+}
+
+function pickCandidatesWithDigitConstraint(max, banSet, history, needCount, usedDigits){
   const cand=[];
   for(let n=1;n<=max;n++){
     if(banSet.has(n)) continue;
-    let s=0;
-
-    let g=0; for(let h of history){ if(h.includes(n)) break; g++; }
-    s += Math.min(g, 6) * 1.2;
-
-    let f=0; history.forEach(h=>{ if(h.includes(n)) f++; });
-    if(f===0) s += 1.5;
-    if(f===1) s += 1.0;
-    if(f>=4) s -= 1.5;
-
-    const t=trendOf(n,history);
-    if(t==="↑") s += 0.7;
-    if(t==="↓") s -= 0.3;
-
-    cand.push({n,s});
+    const d=lastDigit(n);
+    if(usedDigits.has(d)) continue;
+    cand.push({n, s:scoreCandidate(n,history)});
   }
   cand.sort((a,b)=>b.s-a.s);
   return cand.slice(0,needCount).map(x=>x.n);
 }
 
-/* =========================================================
-   プール生成（超重要）
-   - 前回数字は pull だけ入れる
-   - 他の前回数字は絶対に入れない
-========================================================= */
-function buildPoolStrict(last,max,size,history){
-  const pull = pickPullAdvanced(last,history);
-  const ban = new Set(last.filter(n=>n!==pull));
+function buildPoolWithRules(opts){
+  const {
+    latest, history, max, poolSize,
+    pullsCountMin, pullsCountMax, // mini 1-2 / l6 1-1
+    gameType // "l6" or "mini"
+  } = opts;
 
-  const pool=[pull];
-  const need=size-1;
+  // 1) 連続出現（前回＋前々回共通）を検出 → 完全除外
+  const dupes = getConsecutiveDupes(latest, history); // 共通数字
+  const dupesSet = new Set(dupes);
 
-  const picked = pickCandidates(max, new Set([...ban, pull]), history, need);
-  picked.forEach(n=>pool.push(n));
+  // 2) pull候補 = latest - dupes
+  const pullCands = latest.filter(n=>!dupesSet.has(n));
 
-  const ov = overlapCount(pool,last);
-  if(ov!==1){
-    let cleaned = pool.filter(n => n===pull || !ban.has(n));
-    cleaned = Array.from(new Set(cleaned));
-    while(cleaned.length<size){
-      const more = pickCandidates(max, new Set([...ban, ...cleaned]), history, 1);
-      if(more.length===0) break;
-      cleaned.push(more[0]);
-    }
-    return {pool:cleaned.sort((a,b)=>a-b), pull};
+  // 3) pull個数（ミニだけ 1〜2 自動）
+  let pullsCount = pullsCountMin;
+  if(pullsCountMax>pullsCountMin){
+    // 候補が3以上あるなら2個引っ張りに寄せる（ゆうちゃん仕様：1〜2自動）
+    pullsCount = (pullCands.length>=3) ? pullsCountMax : pullsCountMin;
   }
-  return {pool:pool.sort((a,b)=>a-b), pull};
+
+  // 4) pulls選定（1個目はスコア最大、2個目は「下一桁が被らない」方向）
+  const pulls = [];
+  if(pullsCount>=1){
+    const p1 = pickPullFromCandidates(pullCands, history) ?? pullCands[0];
+    pulls.push(p1);
+  }
+  if(pullsCount>=2){
+    const forbid = new Set([ lastDigit(pulls[0]) ]);
+    const rest = pullCands.filter(n=>n!==pulls[0] && !forbid.has(lastDigit(n)));
+    let p2 = null;
+    if(rest.length>0) p2 = pickPullFromCandidates(rest, history);
+    if(!p2){
+      // どうしても無理なら重複を許して2つ目（ただし後で“1組だけ”ペアは別で作るので、極力避ける）
+      const rest2 = pullCands.filter(n=>n!==pulls[0]);
+      p2 = rest2.length? pickPullFromCandidates(rest2, history) : null;
+    }
+    if(p2) pulls.push(p2);
+  }
+  // pulls内重複防止
+  const uniqPulls = Array.from(new Set(pulls)).sort((a,b)=>a-b);
+
+  // 5) banSet：前回のうち pulls 以外は入れない（従来仕様）＋ dupes は全禁止
+  const ban = new Set();
+  latest.forEach(n=>{
+    if(dupesSet.has(n)) ban.add(n);                 // 連続出現は完全禁止
+    else if(!uniqPulls.includes(n)) ban.add(n);     // pulls以外の前回数字は禁止（従来）
+  });
+
+  // 6) プール構築： pulls + “下一桁同一ペアを1組だけ” + 残りは下一桁被り禁止
+  const pool = [...uniqPulls];
+
+  const usedDigits = new Set(uniqPulls.map(lastDigit));
+  // pairDigit は pulls の下一桁と被らないのが理想（＝余計なペア増を防ぐ）
+  const forbiddenPairDigits = new Set(usedDigits);
+
+  // pair候補選定
+  const bestPair = pickBestPairDigit(max, ban, history, forbiddenPairDigits);
+
+  // ペアが作れないと“必ず1組だけ”が崩れるので、安全策：
+  // pairDigit が pulls と被ることを許して再探索（最終手段）
+  let pairA=null, pairB=null;
+  if(bestPair){
+    pairA=bestPair.a; pairB=bestPair.b;
+  }else{
+    const fallbackPair = pickBestPairDigit(max, ban, history, new Set());
+    if(fallbackPair){
+      pairA=fallbackPair.a; pairB=fallbackPair.b;
+    }
+  }
+
+  if(pairA==null || pairB==null){
+    // ここまで来ると履歴/入力が変で候補が枯れてる。ペア必須のため停止。
+    return {
+      ok:false,
+      reason:"下一桁同一ペアを作れません（除外が多すぎる可能性）。履歴の更新/前回入力を確認してね。",
+      dupes, pulls:uniqPulls, pool:[], pair:null
+    };
+  }
+
+  // pair を追加（ペアは1組だけ作りたいので、pairDigit を “重複許可” として扱う）
+  pool.push(pairA, pairB);
+
+  const pairDigit = lastDigit(pairA);
+  // usedDigits：pairDigit は “もう使った扱い”にして残りの追加で被らないようにする
+  usedDigits.add(pairDigit);
+
+  // 7) 残りを埋める（下一桁の追加重複を禁止）
+  const need = poolSize - pool.length;
+  if(need>0){
+    const more = pickCandidatesWithDigitConstraint(max, new Set([...ban, ...pool]), history, need, usedDigits);
+    more.forEach(n=>{
+      pool.push(n);
+      usedDigits.add(lastDigit(n));
+    });
+  }
+
+  // 最終重複/サイズ調整
+  const finalPool = Array.from(new Set(pool)).sort((a,b)=>a-b).slice(0, poolSize);
+
+  return {
+    ok:true,
+    dupes,
+    pulls: uniqPulls,
+    pullsCount: uniqPulls.length,
+    pair: [pairA, pairB].sort((a,b)=>a-b),
+    pool: finalPool
+  };
 }
 
+/* =========================================================
+   組合せ
+========================================================= */
 function comb(a,k){
   const r=[];
   const f=(s,c)=>{
@@ -860,7 +792,7 @@ function comb(a,k){
 }
 
 /* =========================================================
-   スコア（厳しめ）
+   スコア（厳しめ：既存踏襲）
 ========================================================= */
 function zoneCount(nums, type){
   let s=0,m=0,l=0;
@@ -879,9 +811,9 @@ function scoreTicket(t,last,history,type){
 
   if(hasSeq(t)) s += 6;
 
+  // 一致条件は render 側で厳密に落とす（ここは加点だけ）
   const ov = overlapCount(t,last);
-  if(ov===1) s += 8;
-  else s -= 999;
+  s += ov * 4;
 
   t.forEach(n=>{
     let g=0; for(let h of history){ if(h.includes(n)) break; g++; }
@@ -918,36 +850,84 @@ function countSeqPairs(a){
 }
 
 /* =========================================================
-   描画（一致=1固定＋pull固定）
+   ✅ 描画（厳密フィルタ）
+   - 連番必須
+   - pulls 必須
+   - “前回数字の一致数”は pullsCount と完全一致
+   - pulls以外の前回数字の混入禁止
+   - 連続出現（dupes）は完全禁止（入ってたら即落ち）
+   - 下一桁同一ペアは “必ず1組だけ” かつ “指定ペアが入っていること”
+   - 表示は上位3口だけ（残りは hidden で showAll で復活）
 ========================================================= */
-function renderTickets(rootId,list,last,history,type,pull){
+function renderTickets(rootId, list, latest, history, type, pack){
   const root=document.getElementById(rootId);
   root.innerHTML="";
 
+  const pulls = pack.pulls.slice();
+  const pullsSet = new Set(pulls);
+  const pullsCount = pulls.length;
+
+  const dupesSet = new Set(pack.dupes || []);
+  const forbiddenFromLatest = new Set(latest.filter(n=>!pullsSet.has(n))); // pulls以外の前回数字は禁止
+
+  const pair = pack.pair || null;
+  const pairSet = pair ? new Set(pair) : null;
+
   const keep=[];
-  const others = last.filter(n=>n!==pull);
 
   list.forEach(t=>{
-    if(!hasSeq(t)) return;                 // 連番必須
-    if(!t.includes(pull)) return;          // pull必須（＝一致の中身を固定）
-    const ov = overlapCount(t,last);
-    if(ov!==1) return;                     // 一致は必ず1個
-    if(t.some(n=>others.includes(n))) return; // pull以外の前回数字混入禁止
+    t = t.slice().sort((a,b)=>a-b);
 
-    const sc = scoreTicket(t,last,history,type);
+    if(!hasSeq(t)) return;
+
+    // pulls 必須
+    for(const p of pulls){
+      if(!t.includes(p)) return;
+    }
+
+    // 連続出現（dupes）禁止
+    for(const d of dupesSet){
+      if(t.includes(d)) return;
+    }
+
+    // pulls以外の前回数字 混入禁止
+    for(const n of t){
+      if(forbiddenFromLatest.has(n)) return;
+    }
+
+    // 一致数は pullsCount と一致（= pullsだけ一致）
+    const ov = overlapCount(t, latest);
+    if(ov !== pullsCount) return;
+
+    // 下一桁同一ペア：必ず1組だけ（0も2以上も禁止）
+    if(!hasExactlyOneLastDigitPair(t)) return;
+
+    // さらに “指定したペア” が必ず含まれる（ペアが1組だけ固定のため）
+    if(pairSet){
+      if(!(t.includes(pair[0]) && t.includes(pair[1]))) return;
+    }else{
+      return; // ペア必須
+    }
+
+    const sc = scoreTicket(t, latest, history, type);
     const st = stars(sc);
+
     keep.push({t,sc,st,ov});
   });
 
   keep.sort((a,b)=>b.sc-a.sc);
 
-  keep.forEach(o=>{
+  // プール欄（説明用）
+  const shown = keep.slice(0); // 保存用
+
+  // 表示：上位3だけ見せる（残り hidden）
+  shown.forEach((o,idx)=>{
     const st=o.st;
     const lab=labelByStar(st);
     const z=zoneCount(o.t,type);
 
     const d=document.createElement("div");
-    d.className="ticket";
+    d.className="ticket" + (idx>=STATE.renderLimit ? " isHidden" : "");
     d.innerHTML=`
       <div class="stars star${st}">${"★".repeat(st)}</div>
       <div class="nums">${o.t.map(x=>String(x).padStart(2,"0")).join(" ")}</div>
@@ -961,6 +941,14 @@ function renderTickets(rootId,list,last,history,type,pull){
     `;
     root.appendChild(d);
   });
+
+  // 3口も出なかった時の救済表示
+  if(root.children.length===0){
+    const d=document.createElement("div");
+    d.className="meta";
+    d.textContent="条件が厳しすぎて候補が0口になった。前回入力 or 履歴の最新更新を確認してね。";
+    root.appendChild(d);
+  }
 }
 
 /* =========================================================
@@ -981,13 +969,29 @@ function calc(){
 
   // ---- ロト6 ----
   if(l6){
-    const p6=buildPoolStrict(l6,43,7,STATE.histories.l6);
-    STATE.lastInputs.l6 = l6;
-    STATE.pools.l6 = p6;
+    const pack6 = buildPoolWithRules({
+      latest:l6,
+      history:STATE.histories.l6,
+      max:43,
+      poolSize:7,
+      pullsCountMin:1,
+      pullsCountMax:1,
+      gameType:"l6"
+    });
 
-    document.getElementById("pool6").textContent=p6.pool.map(x=>String(x).padStart(2,"0")).join(" ");
-    document.getElementById("meta6").textContent=`固定（引っ張り1）:${String(p6.pull).padStart(2,"0")} ／ 他の前回数字は除外（強制）`;
-    renderTickets("out6", comb(p6.pool,6), l6, STATE.histories.l6, "l6", p6.pull);
+    if(!pack6.ok){
+      alert(pack6.reason);
+      return;
+    }
+
+    STATE.lastInputs.l6 = l6;
+    STATE.pools.l6 = pack6;
+
+    document.getElementById("pool6").textContent=pack6.pool.map(x=>String(x).padStart(2,"0")).join(" ");
+    document.getElementById("meta6").textContent=
+      `連続除外:${(pack6.dupes||[]).map(n=>String(n).padStart(2,"0")).join(" ")||"なし"} ／ 引っ張り:${pack6.pulls.map(n=>String(n).padStart(2,"0")).join(" ")} ／ 下一桁同一ペア固定:${pack6.pair.map(n=>String(n).padStart(2,"0")).join(" ")} ／ 表示:上位${STATE.renderLimit}口`;
+
+    renderTickets("out6", comb(pack6.pool,6), l6, STATE.histories.l6, "l6", pack6);
   }else{
     STATE.lastInputs.l6 = null;
     STATE.pools.l6 = null;
@@ -998,13 +1002,29 @@ function calc(){
 
   // ---- ミニロト ----
   if(m){
-    const pm=buildPoolStrict(m,31,6,STATE.histories.mini);
-    STATE.lastInputs.mini = m;
-    STATE.pools.mini = pm;
+    const packM = buildPoolWithRules({
+      latest:m,
+      history:STATE.histories.mini,
+      max:31,
+      poolSize:6,
+      pullsCountMin:1,
+      pullsCountMax:2,
+      gameType:"mini"
+    });
 
-    document.getElementById("poolM").textContent=pm.pool.map(x=>String(x).padStart(2,"0")).join(" ");
-    document.getElementById("metaM").textContent=`固定（引っ張り1）:${String(pm.pull).padStart(2,"0")} ／ 他の前回数字は除外（強制）`;
-    renderTickets("outM", comb(pm.pool,5), m, STATE.histories.mini, "mini", pm.pull);
+    if(!packM.ok){
+      alert(packM.reason);
+      return;
+    }
+
+    STATE.lastInputs.mini = m;
+    STATE.pools.mini = packM;
+
+    document.getElementById("poolM").textContent=packM.pool.map(x=>String(x).padStart(2,"0")).join(" ");
+    document.getElementById("metaM").textContent=
+      `連続除外:${(packM.dupes||[]).map(n=>String(n).padStart(2,"0")).join(" ")||"なし"} ／ 引っ張り:${packM.pulls.map(n=>String(n).padStart(2,"0")).join(" ")}（${packM.pulls.length}個固定） ／ 下一桁同一ペア固定:${packM.pair.map(n=>String(n).padStart(2,"0")).join(" ")} ／ 表示:上位${STATE.renderLimit}口`;
+
+    renderTickets("outM", comb(packM.pool,5), m, STATE.histories.mini, "mini", packM);
   }else{
     STATE.lastInputs.mini = null;
     STATE.pools.mini = null;
@@ -1034,28 +1054,35 @@ function judge(){
   const hasM  = !!STATE.pools.mini;
 
   if(hasL6 && !hasM){
-    el.textContent = (a>=3) ? "今日はロト6全力（勝負日）" : "今日はロト6寄せ";
+    el.textContent = (a>=2) ? "今日はロト6全力（勝負日）" : "今日はロト6寄せ";
     return;
   }
   if(!hasL6 && hasM){
-    el.textContent = (b>=3) ? "今日はミニロト厚め（勝負日）" : "今日はミニロト寄せ";
+    el.textContent = (b>=2) ? "今日はミニロト厚め（勝負日）" : "今日はミニロト寄せ";
     return;
   }
 
-  if(a>=3 && a>b) el.textContent="今日はロト6全力（勝負日）";
-  else if(b>=3 && b>a) el.textContent="今日はミニロト厚め（勝負日）";
+  if(a>=2 && a>b) el.textContent="今日はロト6全力（勝負日）";
+  else if(b>=2 && b>a) el.textContent="今日はミニロト厚め（勝負日）";
   else if(a>b) el.textContent="今日はロト6寄せ";
   else if(b>a) el.textContent="今日はミニロト寄せ";
   else el.textContent="両方様子見";
 }
 
+/* =========================================================
+   表示切替（既存機能維持）
+========================================================= */
 function showStrong(){
   document.querySelectorAll(".ticket").forEach(t=>{
     if(!t.querySelector(".star3")) t.style.display="none";
+    else t.style.display="block";
   });
 }
 function showAll(){
-  document.querySelectorAll(".ticket").forEach(t=>t.style.display="block");
+  document.querySelectorAll(".ticket").forEach(t=>{
+    t.classList.remove("isHidden");
+    t.style.display="block";
+  });
 }
 
 /* =========================================================
